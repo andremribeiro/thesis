@@ -1,0 +1,12 @@
+uav1:
+  id: 1
+  x: 0
+  y: 0
+  z: 0
+  heading: 0
+uav2:
+  id: 2
+  x: 0
+  y: -10
+  z: 0
+  heading: 0

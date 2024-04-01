@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+<package>
+  <name>mean_shift_clustering</name>
+  <version>0.0.0</version>
+  <description>mean_shift_clustering</description>
+
+  <maintainer email="ana.batinovic@fer.hr">Ana Batinovic</maintainer>
+
+  <license>BSD</license>
+
+  <buildtool_depend>catkin</buildtool_depend>
+  <build_depend>roscpp</build_depend>
+
+  <run_depend>catkin</run_depend>
+  <run_depend>roscpp</run_depend>
+
+</package>

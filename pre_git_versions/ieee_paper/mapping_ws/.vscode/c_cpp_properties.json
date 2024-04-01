@@ -1,0 +1,31 @@
+{
+  "configurations": [
+    {
+      "browse": {
+        "databaseFilename": "${default}",
+        "limitSymbolsToIncludedHeaders": false
+      },
+      "includePath": [
+        "/home/andre/mapping_ws/devel/include/**",
+        "/opt/ros/noetic/include/**",
+        "/home/andre/mapping_ws/src/common_nebula_slam/frontend_utils/include/**",
+        "/home/andre/mapping_ws/src/common_nebula_slam/geometry_utils/include/**",
+        "/home/andre/mapping_ws/src/LOCUS/locus/include/**",
+        "/home/andre/mapping_ws/src/LOCUS/multithreaded_gicp/include/**",
+        "/home/andre/mapping_ws/src/common_nebula_slam/parameter_utils/include/**",
+        "/home/andre/mapping_ws/src/LOCUS/point_cloud_filter/include/**",
+        "/home/andre/mapping_ws/src/LOCUS/point_cloud_localization/include/**",
+        "/home/andre/mapping_ws/src/common_nebula_slam/point_cloud_mapper/include/**",
+        "/home/andre/mapping_ws/src/LOCUS/point_cloud_merger/include/**",
+        "/home/andre/mapping_ws/src/LOCUS/point_cloud_odometry/include/**",
+        "/usr/include/**"
+      ],
+      "name": "ROS",
+      "intelliSenseMode": "gcc-x64",
+      "compilerPath": "/usr/bin/gcc",
+      "cStandard": "gnu11",
+      "cppStandard": "c++14"
+    }
+  ],
+  "version": 4
+}

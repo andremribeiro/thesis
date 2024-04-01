@@ -1,0 +1,7 @@
+LOCUS/locus
+/home/andre/mapping_ws/devel/.private/locus/cmake.lock /home/andre/mapping_ws/devel/./cmake.lock
+/home/andre/mapping_ws/devel/.private/locus/lib/liblocus.so /home/andre/mapping_ws/devel/lib/liblocus.so
+/home/andre/mapping_ws/devel/.private/locus/lib/locus/locus_node /home/andre/mapping_ws/devel/lib/locus/locus_node
+/home/andre/mapping_ws/devel/.private/locus/lib/pkgconfig/locus.pc /home/andre/mapping_ws/devel/lib/pkgconfig/locus.pc
+/home/andre/mapping_ws/devel/.private/locus/share/locus/cmake/locusConfig.cmake /home/andre/mapping_ws/devel/share/locus/cmake/locusConfig.cmake
+/home/andre/mapping_ws/devel/.private/locus/share/locus/cmake/locusConfig-version.cmake /home/andre/mapping_ws/devel/share/locus/cmake/locusConfig-version.cmake
