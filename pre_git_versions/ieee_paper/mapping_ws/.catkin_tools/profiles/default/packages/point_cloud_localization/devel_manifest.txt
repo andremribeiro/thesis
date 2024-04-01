@@ -1,7 +1,0 @@
-LOCUS/point_cloud_localization
-/home/andre/mapping_ws/devel/.private/point_cloud_localization/cmake.lock /home/andre/mapping_ws/devel/./cmake.lock
-/home/andre/mapping_ws/devel/.private/point_cloud_localization/lib/libpoint_cloud_localization.so /home/andre/mapping_ws/devel/lib/libpoint_cloud_localization.so
-/home/andre/mapping_ws/devel/.private/point_cloud_localization/lib/pkgconfig/point_cloud_localization.pc /home/andre/mapping_ws/devel/lib/pkgconfig/point_cloud_localization.pc
-/home/andre/mapping_ws/devel/.private/point_cloud_localization/lib/point_cloud_localization/point_cloud_localization_node /home/andre/mapping_ws/devel/lib/point_cloud_localization/point_cloud_localization_node
-/home/andre/mapping_ws/devel/.private/point_cloud_localization/share/point_cloud_localization/cmake/point_cloud_localizationConfig-version.cmake /home/andre/mapping_ws/devel/share/point_cloud_localization/cmake/point_cloud_localizationConfig-version.cmake
-/home/andre/mapping_ws/devel/.private/point_cloud_localization/share/point_cloud_localization/cmake/point_cloud_localizationConfig.cmake /home/andre/mapping_ws/devel/share/point_cloud_localization/cmake/point_cloud_localizationConfig.cmake

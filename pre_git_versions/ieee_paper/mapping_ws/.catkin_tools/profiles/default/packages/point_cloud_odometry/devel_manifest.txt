@@ -1,7 +1,0 @@
-LOCUS/point_cloud_odometry
-/home/andre/mapping_ws/devel/.private/point_cloud_odometry/cmake.lock /home/andre/mapping_ws/devel/./cmake.lock
-/home/andre/mapping_ws/devel/.private/point_cloud_odometry/lib/libpoint_cloud_odometry.so /home/andre/mapping_ws/devel/lib/libpoint_cloud_odometry.so
-/home/andre/mapping_ws/devel/.private/point_cloud_odometry/lib/pkgconfig/point_cloud_odometry.pc /home/andre/mapping_ws/devel/lib/pkgconfig/point_cloud_odometry.pc
-/home/andre/mapping_ws/devel/.private/point_cloud_odometry/lib/point_cloud_odometry/point_cloud_odometry_node /home/andre/mapping_ws/devel/lib/point_cloud_odometry/point_cloud_odometry_node
-/home/andre/mapping_ws/devel/.private/point_cloud_odometry/share/point_cloud_odometry/cmake/point_cloud_odometryConfig-version.cmake /home/andre/mapping_ws/devel/share/point_cloud_odometry/cmake/point_cloud_odometryConfig-version.cmake
-/home/andre/mapping_ws/devel/.private/point_cloud_odometry/share/point_cloud_odometry/cmake/point_cloud_odometryConfig.cmake /home/andre/mapping_ws/devel/share/point_cloud_odometry/cmake/point_cloud_odometryConfig.cmake
