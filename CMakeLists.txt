@@ -74,13 +74,6 @@ target_link_libraries(multiuav_exploration
     ${mrs_msgs_INCLUDE_DIRS}
 )
 
-add_executable(frontier_extraction_three_uav src/frontier_extraction_three_uav.cpp)
-target_link_libraries(frontier_extraction_three_uav
-    ${catkin_LIBRARIES}
-    ${PCL_LIBRARIES}
-    ${mrs_msgs_INCLUDE_DIRS}
-)
-
 add_executable(octomap_merger src/octomap_merger.cpp)
 target_link_libraries(octomap_merger
     ${catkin_LIBRARIES}
