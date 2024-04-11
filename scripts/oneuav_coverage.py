@@ -7,7 +7,7 @@ from mpl_toolkits.mplot3d import Axes3D
 from std_msgs.msg import Float64MultiArray
 from nav_msgs.msg import Odometry
 
-bag_path = '/home/andre/thesis/one_uav.bag'
+bag_path = '/home/andre/thesis/sims/1_uav/test1.bag'
 
 data = {
     'time_odom': [],
@@ -20,7 +20,7 @@ total_distance = 0
 with rosbag.Bag(bag_path, 'r') as bag:
     first_timestamp_coverage = None
     prev_position = None
-    for topic, msg, t in bag.read_messages(topics=['/uav1/estimation_manager/odom_main', '/mappingCoverage1']):
+    for topic, msg, t in bag.read_messages(topics=['/uav1/estimation_manager/odom_main', '/uav1/coverage']):
         try:
             if topic == '/uav1/estimation_manager/odom_main':
                 data['time_odom'].append(t.to_sec())
@@ -29,17 +29,17 @@ with rosbag.Bag(bag_path, 'r') as bag:
                 data['z1'].append(msg.pose.pose.position.z)
                 # Calculate distance
                 curr_position = np.array([msg.pose.pose.position.x, msg.pose.pose.position.y, msg.pose.pose.position.z])
-                if prev_position is not None:
+                if prev_position is not None and data['time_odom'][-1] - data['time_odom'][0] < 233.5:
                     total_distance += np.linalg.norm(curr_position - prev_position)
                 prev_position = curr_position
-            elif topic == '/mappingCoverage1':
+            elif topic == '/uav1/coverage':
                 if first_timestamp_coverage is None:
                     first_timestamp_coverage = msg.data[0]
                 data['time_coverage1'].append(msg.data[0] - first_timestamp_coverage)
-                data['occupied1'].append(msg.data[1] * 100)
-                data['free1'].append(msg.data[2] * 100)
-                data['mapped1'].append((msg.data[1] + msg.data[2]) * 100)
-                data['missing1'].append(msg.data[3] * 100)
+                data['occupied1'].append(100 * msg.data[1] / msg.data[4])
+                data['free1'].append(100 * msg.data[2] / msg.data[4])
+                data['mapped1'].append(100 * (msg.data[1] + msg.data[2]) / msg.data[4])
+                data['missing1'].append(100 * msg.data[3] / msg.data[4])
         except Exception as e:
             print("Failed to append data: ", e)
 
