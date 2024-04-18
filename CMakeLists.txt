@@ -53,29 +53,8 @@ link_directories(
 add_definitions(
     ${PCL_DEFINITIONS})  
 
-add_executable(frontier_extraction src/frontier_extraction.cpp)
-target_link_libraries(frontier_extraction
-    ${catkin_LIBRARIES}
-    ${PCL_LIBRARIES}
-    ${mrs_msgs_INCLUDE_DIRS}
-)
-
-add_executable(frontier_extraction_two_uav src/frontier_extraction_two_uav.cpp)
-target_link_libraries(frontier_extraction_two_uav
-    ${catkin_LIBRARIES}
-    ${PCL_LIBRARIES}
-    ${mrs_msgs_INCLUDE_DIRS}
-)
-
-add_executable(multiuav_exploration src/multiuav_exploration.cpp)
-target_link_libraries(multiuav_exploration
-    ${catkin_LIBRARIES}
-    ${PCL_LIBRARIES}
-    ${mrs_msgs_INCLUDE_DIRS}
-)
-
-add_executable(octomap_merger src/octomap_merger.cpp)
-target_link_libraries(octomap_merger
+add_executable(frontier_exploration src/frontier_exploration.cpp)
+target_link_libraries(frontier_exploration
     ${catkin_LIBRARIES}
     ${PCL_LIBRARIES}
     ${mrs_msgs_INCLUDE_DIRS}
