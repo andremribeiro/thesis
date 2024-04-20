@@ -3,7 +3,6 @@
 #include <mrs_msgs/Vec4.h>
 #include <nav_msgs/Odometry.h>
 #include <std_msgs/Bool.h>
-#include <std_msgs/Int32MultiArray.h>
 #include <std_msgs/Float64MultiArray.h>
 #include <std_srvs/Trigger.h>
 
@@ -42,7 +41,7 @@ public:
         frontier_parent_pub = nh.advertise<visualization_msgs::Marker>(uav_name + "/frontier_parent_markers", 1);
         cluster_pub = nh.advertise<visualization_msgs::Marker>(uav_name + "/cluster_markers", 1);
         waypoint_pub = nh.advertise<visualization_msgs::Marker>(uav_name + "/waypoint_marker", 1);
-        coverage_pub = nh.advertise<std_msgs::Float64MultiArray>(uav_name + "/coverage", 1);
+        results_pub = nh.advertise<std_msgs::Float64MultiArray>(uav_name + "/results", 1);
         uavs_in_range_pub = nh.advertise<std_msgs::Float64MultiArray>(uav_name + "/uavs_in_range", 1);
         hover_srv = nh.serviceClient<std_srvs::Trigger>(uav_name + "/octomap_planner/stop");
         planner_srv = nh.serviceClient<mrs_msgs::Vec4>(uav_name + "/octomap_planner/goto");
@@ -51,7 +50,8 @@ public:
         nh_private.param("lambda", lambda, 0.14);
         nh_private.param("r_exp", r_exp, 1.0);
         nh_private.param("sensor_range", sensor_range, 40.0);
-        nh_private.param("waypoint_distance_threshold", waypoint_distance_threshold, 15.0);
+        nh_private.param("waypoint_distance_threshold", waypoint_distance_threshold, 10.0);
+
         nh_private.param("exploration_min_x", exploration_min_x, -30.0);
         nh_private.param("exploration_max_x", exploration_max_x, 30.0);
         nh_private.param("exploration_min_y", exploration_min_y, -30.0);
@@ -62,38 +62,37 @@ public:
 
     void octomapCallback(const octomap_msgs::Octomap::ConstPtr& msg)
     {
-        octomap::OcTree* temp = dynamic_cast<octomap::OcTree*>(octomap_msgs::binaryMsgToMap(*msg));
+        octomap::OcTree* local_octree = dynamic_cast<octomap::OcTree*>(octomap_msgs::binaryMsgToMap(*msg));
 
-        if(temp)
+        if(local_octree)
         {
-            temp->expand();
+            local_octree->expand();
             if(octree)
             {
-                for(auto it = temp->begin_leafs(), end = temp->end_leafs(); it != end; ++it)
+                for(auto it = local_octree->begin_leafs(), end = local_octree->end_leafs(); it != end; ++it)
                 {
                     octomap::point3d node_pos = it.getCoordinate();
-                    double distance = sqrt(pow(node_pos.x() - pos.x(), 2) + pow(node_pos.y() - pos.y(), 2) + pow(node_pos.z() - pos.z(), 2));
+                    double distance = calculateDistance(pos, node_pos);
                     
                     if(distance <= 0.3)
-                        octree->updateNode(it.getKey(), false); // Set node as free
+                        octree->updateNode(it.getKey(), false);
                     else
                         octree->updateNode(it.getKey(), it->getValue());
+                        octree->
                 }
-                delete temp;
-
-                octomap_msgs::Octomap msg_out;
                 octomap_msgs::binaryMapToMsg(*octree, msg_out);
+
                 msg_out.header.frame_id = "common_origin";
                 octomap_pub.publish(msg_out);
             }
             else
-                octree.reset(temp);
+                octree.reset(local_octree);
         }
         else 
             ROS_ERROR("Failed to convert octomap message to OcTree for UAV %d", uav_index);
 
-        coverage();
-    }
+        results();
+    }    
 
     void plannerCallback(const std_msgs::Bool::ConstPtr& msg)
     {     
@@ -104,12 +103,14 @@ public:
     {     
         pos.x() = msg->pose.pose.position.x;
         pos.y() = msg->pose.pose.position.y;
-        pos.z() = msg->pose.pose.position.z;        
+        pos.z() = msg->pose.pose.position.z;
     }
 
     void frontierDetection()
     {
         frontiers.clear();
+        
+        ros::WallTime start_time = ros::WallTime::now();
 
         bool unknown = false;
         bool occupied = false;
@@ -125,9 +126,8 @@ public:
                 continue;
 
             octomap::OcTreeNode* current_node = octree->search(current_key);
-            bool isOccupied = octree->isNodeOccupied(current_node);
 
-            if (!isOccupied)
+            if (!octree->isNodeOccupied(current_node))
             {
                 unknown = false;
                 occupied = false;
@@ -138,11 +138,11 @@ public:
                 {
                     octomap::point3d ngbr_point =* iter;
 
-                    if (!isWithinExplorationBounds(ngbr_point))
+                    if(!isWithinExplorationBounds(ngbr_point))
                         continue;
 
                     octomap::OcTreeNode* ngbr_node = octree-> search(ngbr_point);
-                    if (ngbr_node == NULL)
+                    if(ngbr_node == NULL)
                         unknown = true;
                     else if(octree->isNodeOccupied(ngbr_node))
                         occupied = true;            
@@ -154,12 +154,17 @@ public:
         }
         ROS_INFO("UAV %d found %zu frontiers", uav_index, frontiers.size());
 
+        ROS_INFO("Frontier detection took %.3f seconds", (ros::WallTime::now() - start_time).toSec());
+
         publishMarker(frontiers, "frontiers", 1, frontier_pub);
     }
 
     void searchParents()
     {
         frontier_parents.clear();
+
+        ros::WallTime start_time = ros::WallTime::now();
+
         int depth = octree->getTreeDepth() - std::log2(r_exp / octree->getResolution());
         octomap::KeySet frontier_children;
         
@@ -176,6 +181,8 @@ public:
         }
         ROS_INFO("UAV %d found %zu frontier parents", uav_index, frontier_parents.size());
 
+        ROS_INFO("Frontier parent search took %.3f seconds", (ros::WallTime::now() - start_time).toSec());
+
         publishMarker(frontier_parents, "frontier_parents", 0.50, frontier_parent_pub);
     }
 
@@ -191,9 +198,12 @@ public:
         neighbors.clear();
         octomap::OcTreeKey neighbor_key;
 
-        for (int dx = -1; dx <= 1; ++dx) {
-            for (int dy = -1; dy <= 1; ++dy) {
-                for (int dz = -1; dz <= 1; ++dz) {
+        for (int dx = -1; dx <= 1; ++dx)
+        {
+            for (int dy = -1; dy <= 1; ++dy)
+            {
+                for (int dz = -1; dz <= 1; ++dz)
+                {
                     if (dx == 0 && dy == 0 && dz == 0)
                         continue;
 
@@ -212,6 +222,8 @@ public:
     void frontierClustering()
     {
 		clusters.clear();
+
+        ros::WallTime start_time = ros::WallTime::now();
 		
 		std::vector<geometry_msgs::Point> original_points {};
 		std::vector<geometry_msgs::Point> clustered_points {};
@@ -228,6 +240,8 @@ public:
 		delete cluster;
 
         ROS_INFO("UAV %d found %zu clusters", uav_index, clusters.size());
+
+        ROS_INFO("Frontier clustering took %.3f seconds", (ros::WallTime::now() - start_time).toSec());
 
         publishMarker(clusters, "clusters", 0.50, cluster_pub);
 	}
@@ -275,6 +289,8 @@ public:
     {
         candidates.clear();
 
+        ros::WallTime start_time = ros::WallTime::now();
+
         for(octomap::KeySet::iterator iter = clusters.begin(), end = clusters.end(); iter != end; ++iter)
         {
             octomap::point3d tempCellPosition = octree->keyToCoord(*iter);
@@ -298,12 +314,21 @@ public:
 
         std::vector<double> candidate_scores(candidates.size());
 
+        double distance_sum = 0.0;
+
+        for (const auto& dist : distance_to_uavs) {
+            distance_sum += dist;
+        }
+
         for(int i = 0; i < candidates.size(); i++)
         {
             auto current_candidate = candidates[i];
             double distance = calculateDistance(pos, current_candidate);
             double info_gain = calculateInfoGain(current_candidate);
-            candidate_scores[i] = 100.0 * info_gain * exp(-lambda * distance);
+            if(distance_to_uavs.size() == 0)
+                candidate_scores[i] = 100.0 * info_gain * exp(-lambda * distance);
+            else
+                candidate_scores[i] = 100.0 * info_gain * exp(-lambda * (distance + distance_to_uavs.size() / distance_sum));
 
             auto current_key = octree->coordToKey(current_candidate);
             if(unreached.find(current_key) != unreached.end())
@@ -316,6 +341,8 @@ public:
         int max_score_index = std::max_element(candidate_scores.begin(), candidate_scores.end()) - candidate_scores.begin();
 
         ROS_INFO("Waypoint (%.2f,%.2f,%.2f) for UAV %d selected with score: %f", candidates[max_score_index].x(), candidates[max_score_index].y(), candidates[max_score_index].z(), uav_index, candidate_scores[max_score_index]);
+
+        ROS_INFO("Frontier evaluation took %.3f seconds", (ros::WallTime::now() - start_time).toSec());
 
         waypoint_score = candidate_scores[max_score_index];
 
@@ -344,14 +371,17 @@ public:
         int unknown = 0;
         int total = 0;
 
-        for(double dx = bbx_min.x(); dx < bbx_max.x(); dx += r_exp) {
-            for(double dy = bbx_min.y(); dy < bbx_max.y(); dy += r_exp) {
-                for (double dz = bbx_min.z(); dz < bbx_max.z(); dz += r_exp) {
+        for(double dx = bbx_min.x(); dx < bbx_max.x(); dx += r_exp)
+        {
+            for(double dy = bbx_min.y(); dy < bbx_max.y(); dy += r_exp)
+            {
+                for (double dz = bbx_min.z(); dz < bbx_max.z(); dz += r_exp)
+                {
                     octomap::point3d direction(dx - sensor_origin.x(), dy - sensor_origin.y(), dz - sensor_origin.z());
                     double elevation_angle = atan2(direction.z(), sqrt(direction.x() * direction.x() + direction.y() * direction.y()));
 
-                    // Check if the point is within the sensor's vertical FOV
-                    if(abs(elevation_angle) <= M_PI / 4) { // 90 degrees FOV
+                    if(abs(elevation_angle) <= M_PI / 4)
+                    {
                         total++;
                         if(!octree->search(dx, dy, dz)) unknown++;
                     }
@@ -429,17 +459,21 @@ public:
         waypoint_pub.publish(marker);
     }
 
-    void coverage()
+    void results()
     {
-        double total_cells, missing_cells;
         double free_cells {0}, occupied_cells {0};
+
+        double total_cells = ((exploration_max_x - exploration_min_x) * 
+                              (exploration_max_y - exploration_min_y) * 
+                              (exploration_max_z - exploration_min_z)) / 
+                              std::pow(octree->getResolution(), 3);
 
         octree->expand();
 
         for(octomap::OcTree::leaf_iterator it = octree->begin(), end=octree->end(); it!= end; ++it)
         {
-            octomap::point3d nodePos = it.getCoordinate();
-            if(isWithinExplorationBounds(nodePos))
+            octomap::point3d node_pos = it.getCoordinate();
+            if(isWithinExplorationBounds(node_pos))
             {
                 if(!octree->isNodeOccupied(*it))
                     free_cells++;
@@ -448,22 +482,31 @@ public:
             }
         }
 
-        total_cells = ((exploration_max_x - exploration_min_x) * (exploration_max_y - exploration_min_y) * (exploration_max_z - exploration_min_z)) / std::pow(octree->getResolution(), 3);
-        missing_cells = total_cells - free_cells - occupied_cells;
+        double known_cells = free_cells + occupied_cells;
+        double unknown_cells = total_cells - known_cells;
 
-        double mapped = 100.0 * (free_cells + occupied_cells) / total_cells;
+        ROS_INFO("UAV %d mapped: %.2f %%", uav_index, (known_cells / total_cells) * 100.0);
 
-        ROS_INFO("UAV %d mapped: %.2f %%", uav_index, mapped);
-
-        std_msgs::Float64MultiArray coverage;
-		coverage.data.resize(5);
-		coverage.data[0] = ros::Time::now().toSec();
-		coverage.data[1] = occupied_cells;
-		coverage.data[2] = free_cells;
-		coverage.data[3] = missing_cells;
-		coverage.data[4] = total_cells;
+        std_msgs::Float64MultiArray results;
+		results.data.resize(14);
+		results.data[0] = ros::Time::now().toSec();
+		results.data[1] = free_cells;
+		results.data[2] = occupied_cells;
+		results.data[3] = unknown_cells;
+		results.data[4] = total_cells;
+        results.data[5] = frontiers.size();
+        results.data[6] = frontier_parents.size();
+        results.data[7] = clusters.size();
+        results.data[8] = candidates.size();
+        results.data[9] = waypoint_score;
+        results.data[10] = waypoint.x();
+        results.data[11] = waypoint.y();
+        results.data[12] = waypoint.z();
+        results.data[13] = path_available;
+        // for(int i=0; i<distance_to_uavs.size(); i++)
+        //     results.data[14+i] = distance_to_uavs[i];
 	
-		coverage_pub.publish(coverage);
+		results_pub.publish(results);
 
         std_msgs::Float64MultiArray msg;
         msg.data.resize(uavs_in_range.size() + 1);
@@ -486,7 +529,7 @@ public:
     ros::Publisher frontier_parent_pub;
     ros::Publisher cluster_pub;
     ros::Publisher waypoint_pub;
-    ros::Publisher coverage_pub;
+    ros::Publisher results_pub;
     ros::Publisher uavs_in_range_pub;
     ros::ServiceClient hover_srv;
     ros::ServiceClient planner_srv;
@@ -503,9 +546,9 @@ public:
     float waypoint_score;
     std::unordered_map<octomap::OcTreeKey, int, octomap::OcTreeKey::KeyHash> unreached;
     std::set<int> uavs_in_range;
+    std::vector<float> distance_to_uavs;
 
     int uav_index;
-    int num_uavs;
 
 private:
 
@@ -537,7 +580,7 @@ public:
         }
 
         nh_private.param("just_detection", just_detection, false);
-        nh_private.param("merge_distance", merge_distance, 20.0);
+        nh_private.param("comms_range", comms_range, 20.0);
         nh_private.param("min_score", min_score, 0.2);
         nh_private.param("r_exp", r_exp, 0.5);
         nh_private.param("update_rate", update_rate, 1.0);
@@ -581,6 +624,8 @@ public:
     {
         for(auto& uav1 : uavs)
         {
+            uav1.distance_to_uavs.clear();
+
             for(auto& uav2 : uavs)
             {
                 if(uav1.uav_index == uav2.uav_index)
@@ -588,8 +633,9 @@ public:
 
                 double distance = (uav1.pos - uav2.pos).norm();
 
-                if(distance <= merge_distance && uav1.octree && uav2.octree)
+                if(distance <= comms_range && uav1.octree && uav2.octree)
                 {
+                    uav1.distance_to_uavs.push_back(distance);
                     for(auto it = uav2.octree->begin_leafs(), end = uav2.octree->end_leafs(); it != end; ++it)
                     {
                         uav1.octree->updateNode(it.getKey(), it->getValue());
@@ -645,7 +691,7 @@ public:
 
             for (auto& other_uav : uavs)
             {
-                if (other_uav.uav_index != uav.uav_index && (other_uav.pos - uav.pos).norm() <= merge_distance)
+                if (other_uav.uav_index != uav.uav_index && (other_uav.pos - uav.pos).norm() <= comms_range)
                 {
                     if (uav.uavs_in_range.find(other_uav.uav_index) == uav.uavs_in_range.end())
                     {
@@ -655,7 +701,7 @@ public:
                     }
                 }
 
-                else if(other_uav.uav_index != uav.uav_index && (other_uav.pos - uav.pos).norm() > merge_distance)
+                else if(other_uav.uav_index != uav.uav_index && (other_uav.pos - uav.pos).norm() > comms_range)
                 {
                     if (uav.uavs_in_range.find(other_uav.uav_index) != uav.uavs_in_range.end())
                     {
@@ -677,7 +723,7 @@ public:
 
 private:
     bool just_detection;
-    double merge_distance;
+    double comms_range;
     double min_score;
     double r_exp;
     double update_rate;
