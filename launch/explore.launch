@@ -5,7 +5,7 @@
 
     <param name="bandwidth" value="1.0" />
     <param name="lambda" value="0.1" />
-    <param name="r_exp" value="1.0" />
+    <param name="r_exp" value="2.0" />
     <param name="sensor_range" value="20.0" />
     <param name="waypoint_distance_threshold" value="10.0" />
 

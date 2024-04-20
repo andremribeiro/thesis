@@ -78,8 +78,9 @@ public:
                         octree->updateNode(it.getKey(), false);
                     else
                         octree->updateNode(it.getKey(), it->getValue());
-                        octree->
                 }
+                
+                octomap_msgs::Octomap msg_out;
                 octomap_msgs::binaryMapToMsg(*octree, msg_out);
 
                 msg_out.header.frame_id = "common_origin";
@@ -114,25 +115,26 @@ public:
 
         bool unknown = false;
         bool occupied = false;
+        int depth = octree->getTreeDepth() - std::log2(r_exp / octree->getResolution());
 
         std::vector <octomap::point3d> neighbors;
 
-        for(octomap::OcTree::leaf_iterator it = octree->begin_leafs(), end=octree->end_leafs(); it!= end; ++it)
+        for(octomap::OcTree::iterator it = octree->begin(depth), end=octree->end_leafs(); it!= end; ++it)
         {
             octomap::OcTreeKey current_key = it.getKey();
-            octomap::point3d current_point = octree->keyToCoord(current_key);
+            octomap::point3d current_point = octree->keyToCoord(current_key, depth);
 
             if (!isWithinExplorationBounds(current_point))
                 continue;
 
-            octomap::OcTreeNode* current_node = octree->search(current_key);
+            octomap::OcTreeNode* current_node = octree->search(current_key, depth);
 
             if (!octree->isNodeOccupied(current_node))
             {
                 unknown = false;
                 occupied = false;
 
-                getNeighbor(current_key, neighbors);
+                getNeighbor(current_key, neighbors, depth);
 
                 for (std::vector<octomap::point3d>::iterator iter = neighbors.begin(); iter != neighbors.end(); iter++)
                 {
@@ -141,7 +143,7 @@ public:
                     if(!isWithinExplorationBounds(ngbr_point))
                         continue;
 
-                    octomap::OcTreeNode* ngbr_node = octree-> search(ngbr_point);
+                    octomap::OcTreeNode* ngbr_node = octree-> search(ngbr_point, depth);
                     if(ngbr_node == NULL)
                         unknown = true;
                     else if(octree->isNodeOccupied(ngbr_node))
@@ -159,33 +161,6 @@ public:
         publishMarker(frontiers, "frontiers", 1, frontier_pub);
     }
 
-    void searchParents()
-    {
-        frontier_parents.clear();
-
-        ros::WallTime start_time = ros::WallTime::now();
-
-        int depth = octree->getTreeDepth() - std::log2(r_exp / octree->getResolution());
-        octomap::KeySet frontier_children;
-        
-        for(octomap::KeySet::iterator iter = frontiers.begin(), end = frontiers.end(); iter != end; ++iter)
-        {
-            if(octree->search(*iter, depth))
-                frontier_children.insert(*iter);
-        }
-
-        for(octomap::OcTree::iterator it = octree->begin(depth), end = octree->end(); it != end; ++it)
-        {
-            if(frontier_children.find(it.getKey()) != frontier_children.end())
-                frontier_parents.insert(it.getKey());
-        }
-        ROS_INFO("UAV %d found %zu frontier parents", uav_index, frontier_parents.size());
-
-        ROS_INFO("Frontier parent search took %.3f seconds", (ros::WallTime::now() - start_time).toSec());
-
-        publishMarker(frontier_parents, "frontier_parents", 0.50, frontier_parent_pub);
-    }
-
     bool isWithinExplorationBounds(const octomap::point3d& point)
     {
         return (point.x() >= exploration_min_x && point.x() <= exploration_max_x &&
@@ -193,16 +168,17 @@ public:
                 point.z() >= exploration_min_z && point.z() <= exploration_max_z);
     }
 
-    void getNeighbor(const octomap::OcTreeKey& start_key, std::vector<octomap::point3d>& neighbors) 
+    void getNeighbor(const octomap::OcTreeKey& start_key, std::vector<octomap::point3d>& neighbors, int depth) 
     {
         neighbors.clear();
         octomap::OcTreeKey neighbor_key;
+        int depth_diff = octree->getTreeDepth() - depth + 1;
 
-        for (int dx = -1; dx <= 1; ++dx)
+        for (int dx = -depth_diff; dx <= depth_diff; dx += depth_diff)
         {
-            for (int dy = -1; dy <= 1; ++dy)
+            for (int dy = -depth_diff; dy <= depth_diff; dy += depth_diff)
             {
-                for (int dz = -1; dz <= 1; ++dz)
+                for (int dz = -depth_diff; dz <= depth_diff; dz += depth_diff)
                 {
                     if (dx == 0 && dy == 0 && dz == 0)
                         continue;
@@ -212,7 +188,7 @@ public:
                     neighbor_key[1] += dy;
                     neighbor_key[2] += dz;
 
-                    octomap::point3d query = octree->keyToCoord(neighbor_key);
+                    octomap::point3d query = octree->keyToCoord(neighbor_key, depth);
                     neighbors.push_back(query);
                 }
             }
@@ -228,7 +204,7 @@ public:
 		std::vector<geometry_msgs::Point> original_points {};
 		std::vector<geometry_msgs::Point> clustered_points {};
 
-		keyToPointVector(frontier_parents, original_points);
+		keyToPointVector(frontiers, original_points);
 		MSCluster *cluster = new MSCluster();
 		cluster->getMeanShiftClusters(original_points, clustered_points, bandwidth);
 		std::vector<octomap::OcTreeKey> clusters_key {};
@@ -602,7 +578,7 @@ public:
                 if(uav.octree)
                 {
                     uav.frontierDetection();
-                    uav.searchParents();
+                    // uav.searchParents();
                     uav.frontierClustering();
                     uav.waypoint = uav.frontierEvaluation(assigned_waypoints);
                     assigned_waypoints.push_back(uav.waypoint);
