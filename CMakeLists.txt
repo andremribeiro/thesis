@@ -59,3 +59,10 @@ target_link_libraries(frontier_exploration
     ${PCL_LIBRARIES}
     ${mrs_msgs_INCLUDE_DIRS}
 )
+
+add_executable(frontier_exploration_livox src/frontier_exploration_livox.cpp)
+target_link_libraries(frontier_exploration_livox
+    ${catkin_LIBRARIES}
+    ${PCL_LIBRARIES}
+    ${mrs_msgs_INCLUDE_DIRS}
+)

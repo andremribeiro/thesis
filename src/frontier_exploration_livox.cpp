@@ -34,17 +34,17 @@ public:
         : uav_index(i)
     {
         octomap_sub = nh.subscribe<octomap_msgs::Octomap>(uav_name + "/octomap_binary", 1, std::bind(&UAV::octomapCallback, this, std::placeholders::_1));
-        planner_sub = nh.subscribe<std_msgs::Bool>(uav_name + "/octomap_planner/path_available", 1, std::bind(&UAV::plannerCallback, this, std::placeholders::_1));
+        // planner_sub = nh.subscribe<std_msgs::Bool>(uav_name + "/octomap_planner/path_available", 1, std::bind(&UAV::plannerCallback, this, std::placeholders::_1));
         odom_sub = nh.subscribe<nav_msgs::Odometry>(uav_name + "/estimation_manager/odom_main", 1, std::bind(&UAV::odomCallback, this, std::placeholders::_1));
         octomap_pub = nh.advertise<octomap_msgs::Octomap>(uav_name + "/shared_octomap", 1);
         frontier_pub = nh.advertise<visualization_msgs::Marker>(uav_name + "/frontier_markers", 1);
         frontier_parent_pub = nh.advertise<visualization_msgs::Marker>(uav_name + "/frontier_parent_markers", 1);
         cluster_pub = nh.advertise<visualization_msgs::Marker>(uav_name + "/cluster_markers", 1);
         waypoint_pub = nh.advertise<visualization_msgs::Marker>(uav_name + "/waypoint_marker", 1);
-        results_pub = nh.advertise<std_msgs::Float64MultiArray>(uav_name + "/results", 1);
-        uavs_in_range_pub = nh.advertise<std_msgs::Float64MultiArray>(uav_name + "/uavs_in_range", 1);
-        hover_srv = nh.serviceClient<std_srvs::Trigger>(uav_name + "/octomap_planner/stop");
-        planner_srv = nh.serviceClient<mrs_msgs::Vec4>(uav_name + "/octomap_planner/goto");
+        // results_pub = nh.advertise<std_msgs::Float64MultiArray>(uav_name + "/results", 1);
+        // uavs_in_range_pub = nh.advertise<std_msgs::Float64MultiArray>(uav_name + "/uavs_in_range", 1);
+        // hover_srv = nh.serviceClient<std_srvs::Trigger>(uav_name + "/octomap_planner/stop");
+        // planner_srv = nh.serviceClient<mrs_msgs::Vec4>(uav_name + "/octomap_planner/goto");
 
         nh_private.param("bandwidth", bandwidth, 1.0);
         nh_private.param("lambda", lambda, 0.14);
@@ -95,10 +95,10 @@ public:
         results();
     }    
 
-    void plannerCallback(const std_msgs::Bool::ConstPtr& msg)
-    {     
-        path_available = msg->data;
-    }
+    // void plannerCallback(const std_msgs::Bool::ConstPtr& msg)
+    // {     
+    //     path_available = msg->data;
+    // }
     
     void odomCallback(const nav_msgs::OdometryConstPtr& msg)
     {     
@@ -158,7 +158,7 @@ public:
 
         ROS_INFO("Frontier detection took %.3f seconds", (ros::WallTime::now() - start_time).toSec());
 
-        publishMarker(frontiers, "frontiers", 0.75, frontier_pub);
+        publishMarker(frontiers, "frontiers", 1, frontier_pub);
     }
 
     bool isWithinExplorationBounds(const octomap::point3d& point)
@@ -219,7 +219,7 @@ public:
 
         ROS_INFO("Frontier clustering took %.3f seconds", (ros::WallTime::now() - start_time).toSec());
 
-        publishMarker(clusters, "clusters", 1.0, cluster_pub);
+        publishMarker(clusters, "clusters", 0.50, cluster_pub);
 	}
 
     void keyToPointVector(octomap::KeySet& frontierCells, std::vector<geometry_msgs::Point>& original_points)
@@ -418,9 +418,9 @@ public:
         marker.id = 0;
         marker.type = visualization_msgs::Marker::SPHERE_LIST;
         marker.action = visualization_msgs::Marker::ADD;
-        marker.scale.x = 2 * octree->getResolution();
-        marker.scale.y = 2 * octree->getResolution();
-        marker.scale.z = 2 * octree->getResolution();
+        marker.scale.x = octree->getResolution();
+        marker.scale.y = octree->getResolution();
+        marker.scale.z = octree->getResolution();
         marker.color.r = 0.0;
         marker.color.g = 1.0;
         marker.color.b = 1.0;
@@ -710,7 +710,7 @@ private:
 
 int main(int argc, char** argv)
 {
-    ros::init(argc, argv, "frontier_exploration");
+    ros::init(argc, argv, "frontier_exploration_livox");
 
     ros::NodeHandle nh;
     ros::NodeHandle nh_private("~");

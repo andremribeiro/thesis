@@ -4,7 +4,7 @@
     <param name="num_uavs" value="2" />
 
     <param name="bandwidth" value="1.0" />
-    <param name="lambda" value="0.05" />
+    <param name="lambda" value="0.1" />
     <param name="r_exp" value="1.0" />
     <param name="sensor_range" value="20.0" />
     <param name="waypoint_distance_threshold" value="10.0" />
@@ -14,11 +14,11 @@
     <param name="exploration_min_y" value="-30.0" />
     <param name="exploration_max_y" value="30.0" />
     <param name="exploration_min_z" value="0.0" />
-    <param name="exploration_max_z" value="6.0" />
+    <param name="exploration_max_z" value="5.0" />
 
-    <param name="just_detection" type="bool" value="false" />
+    <param name="just_detection" type="bool" value="true" />
     <param name="comms_range" value="40.0" />
-    <param name="min_score" value="0.1" />
+    <param name="min_score" value="1.0" />
     <param name="update_rate" value="1.0" />
 
   </node>
