@@ -1,0 +1,14 @@
+float64 timestamp
+float64 pos_x
+float64 pos_y
+float64 pos_z
+int32 free_cells
+int32 occupied_cells
+int32 unknown_cells
+int32 total_cells
+int32 frontiers_size
+int32 clusters_size
+float64 waypoint_x
+float64 waypoint_y
+float64 waypoint_z
+float64 waypoint_score

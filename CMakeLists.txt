@@ -8,6 +8,7 @@ find_package(catkin REQUIRED COMPONENTS
   actionlib
   angles
   geometry_msgs
+  message_generation
   move_base_msgs
   mrs_msgs
   mrs_modules_msgs
@@ -24,10 +25,20 @@ find_package(catkin REQUIRED COMPONENTS
   mean_shift_clustering
 )
 
+add_message_files(
+  FILES
+  results.msg
+)
+
+generate_messages(
+  DEPENDENCIES
+  std_msgs
+)
+
 catkin_package(
   INCLUDE_DIRS include
   LIBRARIES ${PROJECT_NAME}
-  CATKIN_DEPENDS actionlib angles geometry_msgs move_base_msgs mrs_msgs nav_msgs octomap_msgs octomap_ros pcl_ros roscpp rospy sensor_msgs std_msgs tf visualization_msgs
+  CATKIN_DEPENDS actionlib angles geometry_msgs message_runtime move_base_msgs mrs_msgs nav_msgs octomap_msgs octomap_ros pcl_ros roscpp rospy sensor_msgs std_msgs tf visualization_msgs
   DEPENDS PCL
 )
 
@@ -62,6 +73,13 @@ target_link_libraries(frontier_exploration
 
 add_executable(frontier_exploration_livox src/frontier_exploration_livox.cpp)
 target_link_libraries(frontier_exploration_livox
+    ${catkin_LIBRARIES}
+    ${PCL_LIBRARIES}
+    ${mrs_msgs_INCLUDE_DIRS}
+)
+
+add_executable(frontier_exploration_v2 src/frontier_exploration_v2.cpp)
+target_link_libraries(frontier_exploration_v2
     ${catkin_LIBRARIES}
     ${PCL_LIBRARIES}
     ${mrs_msgs_INCLUDE_DIRS}

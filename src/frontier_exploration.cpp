@@ -49,7 +49,7 @@ public:
         nh_private.param("bandwidth", bandwidth, 1.0);
         nh_private.param("lambda", lambda, 0.14);
         nh_private.param("r_exp", r_exp, 1.0);
-        nh_private.param("sensor_range", sensor_range, 40.0);
+        nh_private.param("sensor_range", sensor_range, 20.0);
         nh_private.param("waypoint_distance_threshold", waypoint_distance_threshold, 10.0);
 
         nh_private.param("exploration_min_x", exploration_min_x, -30.0);

@@ -1,0 +1,24 @@
+<launch>
+    <arg name="num_uavs" default="1"/>
+    <arg name="uav_id" default="1"/>
+
+    <group ns="uav$(arg uav_id)">
+        <node pkg="frontier_exploration" type="frontier_exploration_v2" name="frontier_exploration_v2" output="screen">
+            <param name="num_uavs" value="$(arg num_uavs)"/>
+            <param name="uav_id" value="$(arg uav_id)"/>
+            <param name="comms_range" value="40.0"/>
+            <param name="exploration_min_x" value="-30.0"/>
+            <param name="exploration_max_x" value="30.0"/>
+            <param name="exploration_min_y" value="-30.0"/>
+            <param name="exploration_max_y" value="30.0"/>
+            <param name="exploration_min_z" value="0.0"/>
+            <param name="exploration_max_z" value="6.0"/>
+            <param name="lambda" value="0.04"/>
+            <param name="update_rate" value="1.0"/>
+            <param name="min_score" value="1.0" />
+            <param name="r_exp" value="2.0"/>
+            <param name="sensor_range" value="20.0"/>
+            <param name="waypoint_distance" value="10.0" />
+        </node>
+    </group>
+</launch>
