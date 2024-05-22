@@ -5,11 +5,9 @@ from std_msgs.msg import Float64MultiArray
 import matplotlib.pyplot as plt
 
 # List of rosbag files
-rosbag_files = ['/home/andre/thesis/bags/lambda/test_10_1.bag', 
-                '/home/andre/thesis/bags/lambda/test_20_3.bag', 
-                '/home/andre/thesis/bags/lambda/test_30_3.bag', 
-                '/home/andre/thesis/bags/lambda/test_40_5.bag',
-                '/home/andre/thesis/bags/lambda/test_50_2.bag']
+rosbag_files = ['/home/andre/thesis/bags/lambda/forest_closest_2.bag',
+                '/home/andre/thesis/bags/lambda/forest_00_3.bag',
+                '/home/andre/thesis/bags/lambda/forest_30_3.bag']
 
 def extract_data_from_rosbag(rosbag_file):
     bag = rosbag.Bag(rosbag_file)
@@ -37,13 +35,13 @@ def extract_data_from_rosbag(rosbag_file):
 # Extract data from each rosbag
 all_data = []
 
-lambdas = [1.0, 2.0, 3.0, 4.0, 5.0]
+lambdas = ['Closest', 'Info-Gain', 'Proposed']
 for i, rosbag_file in enumerate(rosbag_files):
     data = extract_data_from_rosbag(rosbag_file)
     all_data.append(data)
 
     # Plot cells in function of time for each rosbag
-    plt.plot(data['time'], data['known_cells'], label=f'lambda={lambdas[i]}')
+    plt.plot(data['time'], data['known_cells'], label=f'{lambdas[i]}')
 
 plt.xlabel('Exploration Time (s)')
 plt.ylabel('Coverage (%)')

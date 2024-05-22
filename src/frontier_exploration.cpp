@@ -53,7 +53,6 @@ public:
         nh_private.param("lambda", lambda, 0.1);
         nh_private.param("max_sensor_range", max_sensor_range, 20.0);
         nh_private.param("min_sensor_range", min_sensor_range, 0.5);
-        nh_private.param("min_score", min_score, 1.0);
         nh_private.param("r_exp", r_exp, 1.0);
         nh_private.param("update_rate", update_rate, 1.0);
         nh_private.param("waypoint_distance", waypoint_distance, 10.0);
@@ -84,7 +83,7 @@ public:
                 {
                     octomap::OcTreeNode* node = octree->search(it.getKey());
                     if(node != NULL)
-                        node->setLogOdds((node->getLogOdds() + it->getLogOdds()) / 2.0);
+                        node->setLogOdds(node->getLogOdds() + it->getLogOdds());
                     else
                         octree->updateNode(it.getKey(), it->getLogOdds());
                 }
@@ -128,7 +127,7 @@ public:
 
         if(distance <= comms_range)
         {
-            octomap::OcTree* shared_octree = dynamic_cast<octomap::OcTree*>(octomap_msgs::binaryMsgToMap(*msg));
+            octomap::OcTree* shared_octree = dynamic_cast<octomap::OcTree*>(octomap_msgs::fullMsgToMap(*msg));
 
             if(shared_octree)
             {
@@ -139,13 +138,13 @@ public:
                     {
                         octomap::OcTreeNode* node = octree->search(it.getKey());
                         if(node != NULL)
-                            node->setLogOdds((node->getLogOdds() + it->getLogOdds()) / 2.0);
+                            node->setLogOdds(node->getLogOdds() + it->getLogOdds());
                         else
                             octree->updateNode(it.getKey(), it->getLogOdds());
                     }
                     
                     octomap_msgs::Octomap msg_out;
-                    octomap_msgs::binaryMapToMsg(*octree, msg_out);
+                    octomap_msgs::fullMapToMsg(*octree, msg_out);
 
                     msg_out.header.frame_id = "common_origin";
                     octomap_pub.publish(msg_out);
@@ -187,6 +186,8 @@ public:
     void frontierDetection()
     {
         frontiers.clear();
+
+        ros::WallTime start_time = ros::WallTime::now();
         
         int depth = octree->getTreeDepth() - std::log2(r_exp / octree->getResolution());
 
@@ -224,6 +225,8 @@ public:
             if(unknown && !occupied)
                 frontiers.insert(current_key);
         }
+
+        detection_time = ros::WallTime::now() - start_time;
 
         publishMarker(frontiers, "frontiers", 1.0, frontier_pub);
     }
@@ -323,52 +326,50 @@ public:
     {
         ros::WallTime start_time = ros::WallTime::now();
 
-        double max_score = -std::numeric_limits<double>::infinity();
+        double best_score = 0;
         octomap::point3d best_candidate;
 
-        for(octomap::KeySet::iterator iter = candidates.begin(), end = candidates.end(); iter != end; ++iter)
-        {
+        for (auto iter = candidates.begin(), end = candidates.end(); iter != end; ++iter) {
             octomap::point3d candidate = octree->keyToCoord(*iter);
 
+            // Pruning based on distance to other UAVs' waypoints
             bool skip_candidate = false;
-            for(const auto& other_waypoint : other_waypoints) {
-                if(other_waypoint.first < uav_id) {
-                    double distance2other_waypoint = (candidate - other_waypoint.second).norm();
-                    if(distance2other_waypoint <= waypoint_distance) {
-                        skip_candidate = true;
-                        continue;
-                    }
+            for (const auto& other_waypoint : other_waypoints) {
+                if (other_waypoint.first < uav_id && (candidate - other_waypoint.second).norm() <= waypoint_distance) {
+                    skip_candidate = true;
+                    break;
                 }
             }
 
-            if(skip_candidate) continue;
+            if (skip_candidate) continue;
 
             double distance_sum = 0.0;
-            for(const auto& other_uav : distance2uavs) {
-                distance_sum += other_uav.second;
+            for (const auto& other_uav : distance2uavs) {
+                distance_sum += other_uav.second / max_sensor_range;
             }
-            
+
             double distance = calculateDistance(pos, candidate);
             double info_gain = calculateInfoGain(candidate);
-            double score;
-            
-            if(distance2uavs.size() == 0)
-                score = 100.0 * info_gain * exp(-lambda * distance / max_sensor_range);
-            else
-                score = 100.0 * info_gain * exp(-lambda * (distance + distance2uavs.size() / distance_sum));
+            double utility_score = 100.0 * info_gain * exp(-lambda * (distance / max_sensor_range + (distance_sum == 0 ? 0 : distance2uavs.size() / distance_sum)));
 
-            if(local_minima.find(*iter) != local_minima.end())
-                score /= std::pow(2, local_minima[*iter]);
+            // Adjust score if candidate is in local minima
+            if (local_minima.find(*iter) != local_minima.end()) {
+                utility_score /= std::pow(2, local_minima[*iter]);
+            }
 
-            if(score > max_score)
-            {
-                max_score = score;
+            if (utility_score > best_score) {
+                best_score = utility_score;
                 best_candidate = candidate;
             }
         }
 
-        waypoint_score = max_score;
-        waypoint = best_candidate;
+        if (best_candidate.x() == 0 && best_candidate.y() == 0 && best_candidate.z() == 0) {
+            waypoint_score = 1;
+            waypoint = pos;
+        } else {
+            waypoint_score = best_score;
+            waypoint = best_candidate;
+        }
 
         evaluation_time = ros::WallTime::now() - start_time;
 
@@ -406,10 +407,6 @@ public:
                         total++;
                         if(!octree->search(dx, dy, dz)) unknown++;
                     }
-                    {
-                        total++;
-                        if(!octree->search(dx, dy, dz)) unknown++;
-                    }
                 }
             }
         }   
@@ -422,9 +419,11 @@ public:
         bool waypoint_reached = false;
         ros::WallTime update_time = ros::WallTime::now();
 
-        if(waypoint_score < min_score)
+        if(waypoint_score < exp(-lambda * num_uavs))
         {
             end_exploration = true;
+            waypoint = pos;
+            waypoint_distance = 0.5;
 
             ROS_INFO("UAV %d has no suitable waypoint", uav_id);
 
@@ -474,6 +473,7 @@ public:
             if(distance2waypoint <= r_exp)
             {
                 ROS_INFO("UAV %d reached waypoint", uav_id);
+                local_minima[octree->coordToKey(waypoint)] += 1;
                 waypoint_reached = true;
                 continue;
             }
@@ -632,7 +632,6 @@ private:
     double max_sensor_range;
     double min_sensor_range;
     double update_rate;
-    double min_score;
     double r_exp;
     double waypoint_distance;
 };
