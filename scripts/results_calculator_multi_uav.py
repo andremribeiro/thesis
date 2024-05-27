@@ -7,11 +7,11 @@ import matplotlib.pyplot as plt
 
 
 # List of rosbag files
-rosbag_files = ['/home/andre/thesis/bags/multi_uav/forest_3uav_low_comms_1.bag', 
-                '/home/andre/thesis/bags/multi_uav/forest_3uav_low_comms_2.bag', 
-                '/home/andre/thesis/bags/multi_uav/forest_3uav_low_comms_3.bag', 
-                '/home/andre/thesis/bags/multi_uav/forest_3uav_low_comms_4.bag', 
-                '/home/andre/thesis/bags/multi_uav/forest_3uav_low_comms_5.bag']
+rosbag_files = ['/home/andre/thesis/bags/3_uav/test_dsga_1.bag', 
+                '/home/andre/thesis/bags/3_uav/test_dsga_2.bag', 
+                '/home/andre/thesis/bags/3_uav/test_dsga_3.bag', 
+                '/home/andre/thesis/bags/3_uav/test_dsga_4.bag', 
+                '/home/andre/thesis/bags/3_uav/test_dsga_5.bag']
 
 def extract_uav_data_from_rosbag(rosbag_file, num_uavs):
     bag = rosbag.Bag(rosbag_file, 'r')
@@ -72,7 +72,7 @@ evaluation_times = []
 computation_times = []
 
 for rosbag_file in rosbag_files:
-    num_uavs = 2 if '2uav' in rosbag_file else 3
+    num_uavs = 2 if '2_uav' in rosbag_file else 3
     uav_data, path_lengths = extract_uav_data_from_rosbag(rosbag_file, num_uavs)
 
     print(uav_data[0]['known_cells'][-1])

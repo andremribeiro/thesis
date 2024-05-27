@@ -6,11 +6,11 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 # List of rosbag files
-rosbag_files = ['/home/andre/thesis/bags/single_uav/forest_50_1.bag', 
-                '/home/andre/thesis/bags/single_uav/forest_50_2.bag', 
-                '/home/andre/thesis/bags/single_uav/forest_50_3.bag', 
-                '/home/andre/thesis/bags/single_uav/forest_50_4.bag', 
-                '/home/andre/thesis/bags/single_uav/forest_50_5.bag']
+rosbag_files = ['/home/andre/thesis/bags/1_uav/forest_20_1.bag', 
+                '/home/andre/thesis/bags/1_uav/forest_20_2.bag', 
+                '/home/andre/thesis/bags/1_uav/forest_20_3.bag', 
+                '/home/andre/thesis/bags/1_uav/forest_20_4.bag', 
+                '/home/andre/thesis/bags/1_uav/forest_20_5.bag',]
 
 def extract_data_from_rosbag(rosbag_file):
     bag = rosbag.Bag(rosbag_file, 'r')
@@ -71,6 +71,7 @@ computation_times = []
 for i, rosbag_file in enumerate(rosbag_files):
     data, path_length = extract_data_from_rosbag(rosbag_file)
     results.append((data, path_length))
+    print(data['time'][-1])
 
 time_values = [data['time'][-1] for data, _ in results]
 time_average = np.mean(time_values)
@@ -216,3 +217,44 @@ print("Computation Time - Average: {:.2f}".format(computation_times_avg))
 print("Computation Time - Standard Deviation: {:.2f}".format(computation_times_std))
 # print("Computation Time - Minimum: {:.2f}".format(computation_times_min))
 # print("Computation Time - Maximum: {:.2f}".format(computation_times_max))
+
+print("{:.2f}".format(time_average), end=" & ")
+print("{:.2f}".format(time_std), end=" & ")
+print("{:.2f}".format(time_min), end=" & ")
+print("{:.2f}".format(time_max), end=" & ")
+print("{:.2f}".format(path_length_average), end=" & ")
+print("{:.2f}".format(path_length_std), end=" & ")
+print("{:.2f}".format(path_length_min), end=" & ")
+print("{:.2f}".format(path_length_max), end=" & ")
+print("{:.2f}".format(coverage_average), end=" & ")
+print("{:.2f}".format(coverage_std), end=" & ")
+print("{:.2f}".format(coverage_min), end=" & ")
+print("{:.2f}".format(coverage_max), end=" \n")
+print("{:.2f}".format(exploration_rate_average), end=" & ")
+print("{:.2f}".format(exploration_rate_std), end=" & ")
+print("{:.2f}".format(exploration_rate_min), end=" & ")
+print("{:.2f}".format(exploration_rate_max), end=" & ")
+print("{:.2f}".format(path_efficiency_average), end=" & ")
+print("{:.2f}".format(path_efficiency_std), end=" & ")
+print("{:.2f}".format(path_efficiency_min), end=" & ")
+print("{:.2f}".format(path_efficiency_max), end=" \n")
+print("{:.2f}".format(time_to_reach_coverage_avg_50), end=" & ")
+print("{:.2f}".format(time_to_reach_coverage_std_50), end=" & ")
+print("{:.2f}".format(time_to_reach_coverage_min_50), end=" & ")
+print("{:.2f}".format(time_to_reach_coverage_max_50), end=" & ")
+print("{:.2f}".format(time_to_reach_coverage_avg_75), end=" & ")
+print("{:.2f}".format(time_to_reach_coverage_std_75), end=" & ")
+print("{:.2f}".format(time_to_reach_coverage_min_75), end=" & ")
+print("{:.2f}".format(time_to_reach_coverage_max_75), end=" & ")
+print("{:.2f}".format(time_to_reach_coverage_avg_90), end=" & ")
+print("{:.2f}".format(time_to_reach_coverage_std_90), end=" & ")
+print("{:.2f}".format(time_to_reach_coverage_min_90), end=" & ")
+print("{:.2f}".format(time_to_reach_coverage_max_90), end=" \n")
+print("{:.2f}".format(detection_time_avg), end=" & ")
+print("{:.2f}".format(detection_time_std), end=" & ")
+print("{:.2f}".format(clustering_time_avg), end=" & ")
+print("{:.2f}".format(clustering_time_std), end=" & ")
+print("{:.2f}".format(evaluation_time_avg), end=" & ")
+print("{:.2f}".format(evaluation_time_std), end=" & ")
+print("{:.2f}".format(computation_times_avg), end=" & ")
+print("{:.2f}".format(computation_times_std))

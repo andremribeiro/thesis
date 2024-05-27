@@ -43,7 +43,7 @@ public:
 
 private:
     void initializeROS(ros::NodeHandle& nh, const std::string& uav_name) {
-        octomap_sub = nh.subscribe<octomap_msgs::Octomap>(uav_name + "/octomap_full", 1, std::bind(&UAV::octomapCallback, this, std::placeholders::_1));
+        octomap_sub = nh.subscribe<octomap_msgs::Octomap>(uav_name + "/octomap_full", 10, std::bind(&UAV::octomapCallback, this, std::placeholders::_1));
         odom_sub = nh.subscribe<nav_msgs::Odometry>(uav_name + "/estimation_manager/odom_main", 1, std::bind(&UAV::odomCallback, this, std::placeholders::_1));
         local_minima_sub = nh.subscribe<std_msgs::Bool>(uav_name + "/octomap_planner/local_minima", 1, std::bind(&UAV::localMinimaCallback, this, std::placeholders::_1));
         octomap_pub = nh.advertise<octomap_msgs::Octomap>(uav_name + "/shared_octomap", 1);
@@ -169,7 +169,7 @@ private:
         other_waypoints[other_uav_id] = shared_waypoint;
     }
 
-    void frontierDetection()
+        void frontierDetection()
     {
         frontiers.clear();
 
@@ -187,9 +187,6 @@ private:
 
             octomap::OcTreeNode* current_node = octree->search(current_key, d_exp);
 
-            if (current_node == nullptr || octree->isNodeOccupied(current_node))
-                continue;
-
             bool unknown = false;
             bool occupied = false;
 
@@ -203,13 +200,13 @@ private:
                     continue;
 
                 octomap::OcTreeNode* ngbr_node = octree-> search(ngbr_point, d_exp);
-                if(ngbr_node == nullptr)
+                if(ngbr_node == NULL)
                     unknown = true;
                 else if(octree->isNodeOccupied(ngbr_node))
                     occupied = true;            
             }
 
-            if(unknown)
+            if(unknown && !occupied)
                 frontiers.insert(current_key);
         }
 
@@ -226,7 +223,7 @@ private:
     {
         neighbors.clear();
         octomap::OcTreeKey neighbor_key;
-        int depth_diff = std::pow(2, octree->getTreeDepth() - d_exp);
+        int depth_diff = octree->getTreeDepth() - d_exp + 1;
 
         for (int dx = -depth_diff; dx <= depth_diff; dx += depth_diff) {
             for (int dy = -depth_diff; dy <= depth_diff; dy += depth_diff) {
@@ -319,15 +316,10 @@ private:
         for (auto iter = candidates.begin(), end = candidates.end(); iter != end; ++iter) {
             octomap::point3d candidate = octree->keyToCoord(*iter);
 
-            // Calculate the distance from the current UAV position to the candidate
-            double distance = calculateDistance(pos, candidate);
-            
-            // Calculate the sum of distances to other UAVs and check if candidate should be skipped
-            double distance_sum = 0.0;
+            // Pruning based on distance to other UAVs' waypoints
             bool skip_candidate = false;
-            for (const auto& other_uav : distance2uavs) {
-                distance_sum += other_uav.second;
-                if (calculateDistance(other_pos[other_uav.first], candidate) <= distance) {
+            for (const auto& other_waypoint : other_waypoints) {
+                if (other_waypoint.first < uav_id && (candidate - other_waypoint.second).norm() <= waypoint_distance) {
                     skip_candidate = true;
                     break;
                 }
@@ -335,7 +327,19 @@ private:
 
             if (skip_candidate) continue;
 
-            // Calculate information gain and utility score
+            double distance_sum = 0.0;
+            double distance = calculateDistance(pos, candidate);
+
+            for (const auto& other_uav : distance2uavs) {
+                distance_sum += other_uav.second;
+                // if (calculateDistance(other_pos[other_uav.first], candidate) <= distance) {
+                //     skip_candidate = true;
+                //     break;
+                // }
+            }
+
+            if (skip_candidate) continue;
+
             double info_gain = calculateInfoGain(candidate);
             double utility_score = 100.0 * info_gain * exp(-lambda * (distance + (distance_sum == 0 ? 0 : distance2uavs.size() / distance_sum)));
 
@@ -344,21 +348,23 @@ private:
                 utility_score /= std::pow(2, local_minima[*iter]);
             }
 
-            // Update the best candidate if the current score is higher
             if (utility_score > best_score) {
                 best_score = utility_score;
                 best_candidate = candidate;
             }
         }
 
-        // Set the waypoint based on whether a best candidate was found
-        if (best_candidate == octomap::point3d(0, 0, 0)) {
+        if(best_candidate.x() == 0 && best_candidate.y() == 0 && best_candidate.z() == 0)
+        {
             waypoint = pos;
             waypoint_score = 0;
-        } else {
-            waypoint = best_candidate;
-            waypoint_score = best_score;
+            return;
         }
+
+        waypoint = best_candidate;
+        waypoint_score = best_score;
+
+        ROS_INFO("Best score: %f", waypoint_score);
 
         evaluation_time = ros::WallTime::now() - start_time;
 
@@ -396,12 +402,11 @@ private:
                     if(abs(elevation_angle) <= M_PI / 4 && direction.norm() <= max_sensor_range && direction.norm() >= min_sensor_range)
                     {
                         total++;
-                        if(!octree->search(dx, dy, dz) && isWithinExplorationBounds(octomap::point3d(dx, dy, dz)))
-                            unknown++;
+                        if(!octree->search(dx, dy, dz)) unknown++;
                     }
                 }
             }
-        }
+        }   
         return (double)unknown / (double)total;
     }
 
@@ -461,7 +466,7 @@ private:
             if(distance2waypoint <= pow(2, octree->getTreeDepth() - d_exp) * octree->getResolution())
             {
                 ROS_INFO("UAV %d reached waypoint", uav_id);
-                local_minima[octree->coordToKey(waypoint)] += 1;
+                // local_minima[octree->coordToKey(waypoint)] += 1;
                 return;
             }
 
@@ -642,7 +647,7 @@ int main(int argc, char** argv)
 
     UAV uav(nh, nh_private, uav_id, num_uavs);
 
-    ros::Rate rate(10);
+    ros::Rate rate(1.0);
     while (ros::ok())
     {
         ros::spinOnce();

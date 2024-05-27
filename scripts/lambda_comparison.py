@@ -5,11 +5,11 @@ from std_msgs.msg import Float64MultiArray
 import matplotlib.pyplot as plt
 
 # List of rosbag files
-rosbag_files = ['/home/andre/thesis/bags/lambda/test_10_1.bag', 
-                '/home/andre/thesis/bags/lambda/test_20_3.bag', 
-                '/home/andre/thesis/bags/lambda/test_30_3.bag', 
-                '/home/andre/thesis/bags/lambda/test_40_5.bag',
-                '/home/andre/thesis/bags/lambda/test_50_2.bag']
+rosbag_files = ['/home/andre/thesis/bags/1_uav/test_05_3.bag', 
+                '/home/andre/thesis/bags/1_uav/test_10_1.bag', 
+                '/home/andre/thesis/bags/1_uav/test_15_1.bag', 
+                '/home/andre/thesis/bags/1_uav/test_20_2.bag',
+                '/home/andre/thesis/bags/1_uav/test_25_3.bag']
 
 def extract_data_from_rosbag(rosbag_file):
     bag = rosbag.Bag(rosbag_file)
@@ -49,5 +49,8 @@ plt.xlabel('Exploration Time (s)')
 plt.ylabel('Coverage (%)')
 plt.title('Environment Coverage in Function of Exploration Time')
 plt.legend()
+plt.grid()
+
+plt.ylim(0, 100)
 
 plt.show()
