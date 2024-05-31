@@ -177,7 +177,7 @@ private:
         
         std::vector <octomap::point3d> neighbors;
 
-        for(octomap::OcTree::iterator it = octree->begin(d_exp), end=octree->end_leafs(); it!= end; ++it)
+        for(octomap::OcTree::iterator it = octree->begin(d_exp), end=octree->end(); it!= end; ++it)
         {
             octomap::OcTreeKey current_key = it.getKey();
             octomap::point3d current_point = octree->keyToCoord(current_key, d_exp);
