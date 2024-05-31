@@ -6,11 +6,11 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 # List of rosbag files
-rosbag_files = ['/home/andre/thesis/bags/1_uav/forest_20_1.bag', 
-                '/home/andre/thesis/bags/1_uav/forest_20_2.bag', 
-                '/home/andre/thesis/bags/1_uav/forest_20_3.bag', 
-                '/home/andre/thesis/bags/1_uav/forest_20_4.bag', 
-                '/home/andre/thesis/bags/1_uav/forest_20_5.bag',]
+rosbag_files = ['/home/andre/thesis/bags/1_uav/forest_bw1_1.bag', 
+                '/home/andre/thesis/bags/1_uav/forest_bw1_2.bag', 
+                '/home/andre/thesis/bags/1_uav/forest_bw1_3.bag', 
+                '/home/andre/thesis/bags/1_uav/forest_bw1_4.bag', 
+                '/home/andre/thesis/bags/1_uav/forest_bw1_5.bag',]
 
 def extract_data_from_rosbag(rosbag_file):
     bag = rosbag.Bag(rosbag_file, 'r')

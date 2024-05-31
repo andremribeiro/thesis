@@ -6,16 +6,16 @@
         <node pkg="frontier_exploration" type="frontier_exploration" name="frontier_exploration" output="screen">
             <param name="num_uavs" value="$(arg num_uavs)"/>
             <param name="uav_id" value="$(arg uav_id)"/>
-            <param name="bandwidth" value="2.0"/>
+            <param name="bandwidth" value="1.0"/>
             <param name="comms_range" value="40.0"/>
-            <param name="exploration_min_x" value="-45.0"/>
-            <param name="exploration_max_x" value="45.0"/>
-            <param name="exploration_min_y" value="-45.0"/>
-            <param name="exploration_max_y" value="45.0"/>
+            <param name="exploration_min_x" value="-20.0"/>
+            <param name="exploration_max_x" value="40.0"/>
+            <param name="exploration_min_y" value="-40.0"/>
+            <param name="exploration_max_y" value="20.0"/>
             <param name="exploration_min_z" value="0.0"/>
             <param name="exploration_max_z" value="4.0"/>
 
-            <param name="lambda" value="0.25"/>
+            <param name="lambda" value="0.10"/>
 
             <param name="update_rate" value="0.5"/>
             <param name="max_sensor_range" value="20.0"/>

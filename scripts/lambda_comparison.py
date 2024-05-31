@@ -37,7 +37,7 @@ def extract_data_from_rosbag(rosbag_file):
 # Extract data from each rosbag
 all_data = []
 
-lambdas = [1.0, 2.0, 3.0, 4.0, 5.0]
+lambdas = [0.05, 0.10, 0.15, 0.20, 0.25]
 for i, rosbag_file in enumerate(rosbag_files):
     data = extract_data_from_rosbag(rosbag_file)
     all_data.append(data)

@@ -7,13 +7,11 @@ import numpy as np
 from collections import defaultdict
 
 # List of rosbag files
-rosbag_files = [
-    '/home/andre/thesis/bags/lambda/forest_bw30_1.bag',
-    '/home/andre/thesis/bags/lambda/forest_bw30_2.bag',
-    '/home/andre/thesis/bags/lambda/forest_bw30_3.bag',
-    '/home/andre/thesis/bags/lambda/forest_bw30_4.bag',
-    '/home/andre/thesis/bags/lambda/forest_bw30_5.bag'
-]
+rosbag_files = ['/home/andre/thesis/bags/1_uav/forest_bw1_1.bag', 
+                '/home/andre/thesis/bags/1_uav/forest_bw1_2.bag', 
+                '/home/andre/thesis/bags/1_uav/forest_bw1_3.bag', 
+                '/home/andre/thesis/bags/1_uav/forest_bw1_4.bag', 
+                '/home/andre/thesis/bags/1_uav/forest_bw1_5.bag',]
 
 def extract_data_from_rosbag(rosbag_file):
     bag = rosbag.Bag(rosbag_file)
@@ -115,5 +113,6 @@ ax.fill_between(frontier_cells,
 ax.set_xlabel('Number of Frontier Cells')
 ax.set_ylabel('Computation Time (ms)')
 ax.legend()
+ax.grid()
 ax.set_title('Avg. Computation Time in Function of Number of Frontier Cells')
 plt.show()

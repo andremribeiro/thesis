@@ -6,7 +6,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 
 # List of rosbag files
-rosbag_file = '/home/andre/thesis/bags/lambda/test_closest_2.bag'
+rosbag_file = '/home/andre/thesis/bags/1_uav/test_bw1_5.bag'
 
 def extract_data_from_rosbag(rosbag_file):
     bag = rosbag.Bag(rosbag_file, 'r')
@@ -59,5 +59,7 @@ plt.xlabel('Exploration Time (s)')
 plt.ylabel('Coverage (%)')
 plt.title('Environment Coverage in Function of Exploration Time')
 plt.legend()
+plt.grid()
+plt.ylim(0, 100)
 
 plt.show()

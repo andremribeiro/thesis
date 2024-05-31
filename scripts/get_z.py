@@ -5,7 +5,7 @@ import matplotlib.pyplot as plt
 
 # List of rosbag file paths
 # List of rosbag files
-rosbag_files = ['/home/andre/thesis/bags/placeholder/single_uav/test_10_1.bag']
+rosbag_files = ['/home/andre/thesis/bags/1_uav/test_bw3_5.bag']
 
 # Initialize empty lists for x and y positions
 z_position = []
@@ -26,6 +26,8 @@ for rosbag_file in rosbag_files:
         time_odom.append(t.to_sec()-first_timestamp)
         z_position.append(msg.pose.pose.position.z)
         velocity.append(np.linalg.norm([msg.twist.twist.linear.x, msg.twist.twist.linear.y, msg.twist.twist.linear.z]))
+        if time_odom[-1] > 105:
+            break
 
     # Close the rosbag file
     bag.close()

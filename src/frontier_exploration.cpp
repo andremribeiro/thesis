@@ -191,7 +191,6 @@ private:
                 continue;
 
             bool unknown = false;
-            bool occupied = false;
 
             getNeighbor(current_key, neighbors);
 
@@ -203,10 +202,10 @@ private:
                     continue;
 
                 octomap::OcTreeNode* ngbr_node = octree-> search(ngbr_point, d_exp);
-                if(ngbr_node == nullptr)
+                if(ngbr_node == nullptr) {
                     unknown = true;
-                else if(octree->isNodeOccupied(ngbr_node))
-                    occupied = true;            
+                    break;
+                }
             }
 
             if(unknown)

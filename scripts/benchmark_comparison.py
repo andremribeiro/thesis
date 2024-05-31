@@ -5,9 +5,9 @@ from std_msgs.msg import Float64MultiArray
 import matplotlib.pyplot as plt
 
 # List of rosbag files
-rosbag_files = ['/home/andre/thesis/bags/lambda/forest_closest_2.bag',
-                '/home/andre/thesis/bags/lambda/forest_00_3.bag',
-                '/home/andre/thesis/bags/lambda/forest_30_3.bag']
+rosbag_files = ['/home/andre/thesis/bags/other/single_uav/test_closest_2.bag',
+                '/home/andre/thesis/bags/other/single_uav/test_00_3.bag',
+                '/home/andre/thesis/bags/1_uav/test_10_1.bag']
 
 def extract_data_from_rosbag(rosbag_file):
     bag = rosbag.Bag(rosbag_file)
@@ -47,5 +47,7 @@ plt.xlabel('Exploration Time (s)')
 plt.ylabel('Coverage (%)')
 plt.title('Environment Coverage in Function of Exploration Time')
 plt.legend()
+plt.grid()
+plt.ylim(0, 100)
 
 plt.show()

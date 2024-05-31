@@ -7,11 +7,11 @@ import matplotlib.pyplot as plt
 
 
 # List of rosbag files
-rosbag_files = ['/home/andre/thesis/bags/3_uav/test_dsga_1.bag', 
-                '/home/andre/thesis/bags/3_uav/test_dsga_2.bag', 
-                '/home/andre/thesis/bags/3_uav/test_dsga_3.bag', 
-                '/home/andre/thesis/bags/3_uav/test_dsga_4.bag', 
-                '/home/andre/thesis/bags/3_uav/test_dsga_5.bag']
+rosbag_files = ['/home/andre/thesis/bags/2_uav/test_proposed_1.bag', 
+                '/home/andre/thesis/bags/2_uav/test_proposed_2.bag', 
+                '/home/andre/thesis/bags/2_uav/test_proposed_3.bag', 
+                '/home/andre/thesis/bags/2_uav/test_proposed_4.bag', 
+                '/home/andre/thesis/bags/2_uav/test_proposed_5.bag']
 
 def extract_uav_data_from_rosbag(rosbag_file, num_uavs):
     bag = rosbag.Bag(rosbag_file, 'r')
@@ -60,7 +60,7 @@ exploration_rate = []
 path_efficiency = []
 coverage_thresholds = [50, 75, 90]
 
-if rosbag_files[0].startswith('test'):
+if 'test' in rosbag_files[0]:
     volume = 14400
 else:
     volume = 32400
@@ -70,19 +70,16 @@ detection_times = []
 clustering_times = []
 evaluation_times = []
 computation_times = []
-
+print(volume)
 for rosbag_file in rosbag_files:
-    num_uavs = 2 if '2_uav' in rosbag_file else 3
+    num_uavs = 2 if ('2_uav' in rosbag_file or '2uav' in rosbag_file) else 3
     uav_data, path_lengths = extract_uav_data_from_rosbag(rosbag_file, num_uavs)
 
-    print(uav_data[0]['known_cells'][-1])
-    print(uav_data[1]['known_cells'][-1])
+    print(uav_data[0]['time'][-1])
+    print(uav_data[1]['time'][-1])
     if num_uavs == 3:
-        print(uav_data[2]['known_cells'][-1])
-    print(uav_data[0]['position_z'][-1])
-    print(uav_data[1]['position_z'][-1])
-    if num_uavs == 3:
-        print(uav_data[2]['position_z'][-1])
+        print(uav_data[2]['time'][-1])
+    print('___________')
 
     results.append((uav_data, path_lengths))
 
@@ -105,6 +102,7 @@ coverage_min = np.min(coverage_values)
 coverage_max = np.max(coverage_values)
 
 for i, (uav_data_list, path_lengths) in enumerate(results):
+    print([uav_data['known_cells'][-1] for uav_data in uav_data_list])
     exploration_rate.append(np.max([uav_data['known_cells'][-1] for uav_data in uav_data_list]) * volume / (100 * np.max([uav_data['time'][-1] for uav_data in uav_data_list])))
     path_efficiency.append(np.max([uav_data['known_cells'][-1] for uav_data in uav_data_list]) * volume / (100 * np.sum(path_lengths)))
     # detection_times.append(1000 * np.mean(uav1_data['detection_time']))
@@ -216,22 +214,35 @@ print("Time to reach 90 coverage - Standard Deviation: {:.2f}".format(time_to_re
 print("Time to reach 90 coverage - Minimum: {:.2f}".format(time_to_reach_coverage_min_90))
 print("Time to reach 90 coverage - Maximum: {:.2f}".format(time_to_reach_coverage_max_90))
 
-# print("Detection Time - Average: {:.2f}".format(detection_time_avg))
-# print("Detection Time - Standard Deviation: {:.2f}".format(detection_time_std))
-# # print("Detection Time - Minimum: {:.2f}".format(detection_time_min))
-# # print("Detection Time - Maximum: {:.2f}".format(detection_time_max))
-
-# print("Clustering Time - Average: {:.2f}".format(clustering_time_avg))
-# print("Clustering Time - Standard Deviation: {:.2f}".format(clustering_time_std))
-# # print("Clustering Time - Minimum: {:.2f}".format(clustering_time_min))
-# # print("Clustering Time - Maximum: {:.2f}".format(clustering_time_max))
-
-# print("Evaluation Time - Average: {:.2f}".format(evaluation_time_avg))
-# print("Evaluation Time - Standard Deviation: {:.2f}".format(evaluation_time_std))
-# # print("Evaluation Time - Minimum: {:.2f}".format(evaluation_time_min))
-# # print("Evaluation Time - Maximum: {:.2f}".format(evaluation_time_max))
-
-# print("Computation Time - Average: {:.2f}".format(computation_times_avg))
-# print("Computation Time - Standard Deviation: {:.2f}".format(computation_times_std))
-# # print("Computation Time - Minimum: {:.2f}".format(computation_times_min))
-# # print("Computation Time - Maximum: {:.2f}".format(computation_times_max))
+print("{:.2f}".format(time_average), end=" & ")
+print("{:.2f}".format(time_std), end=" & ")
+print("{:.2f}".format(time_min), end=" & ")
+print("{:.2f}".format(time_max), end=" & ")
+print("{:.2f}".format(uav_path_length_average), end=" & ")
+print("{:.2f}".format(uav_path_length_std), end=" & ")
+print("{:.2f}".format(uav_path_length_min), end=" & ")
+print("{:.2f}".format(uav_path_length_max), end=" & ")
+print("{:.2f}".format(coverage_average), end=" & ")
+print("{:.2f}".format(coverage_std), end=" & ")
+print("{:.2f}".format(coverage_min), end=" & ")
+print("{:.2f}".format(coverage_max), end=" \n")
+print("{:.2f}".format(exploration_rate_average), end=" & ")
+print("{:.2f}".format(exploration_rate_std), end=" & ")
+print("{:.2f}".format(exploration_rate_min), end=" & ")
+print("{:.2f}".format(exploration_rate_max), end=" & ")
+print("{:.2f}".format(path_efficiency_average), end=" & ")
+print("{:.2f}".format(path_efficiency_std), end=" & ")
+print("{:.2f}".format(path_efficiency_min), end=" & ")
+print("{:.2f}".format(path_efficiency_max), end=" \n")
+print("{:.2f}".format(time_to_reach_coverage_avg_50), end=" & ")
+print("{:.2f}".format(time_to_reach_coverage_std_50), end=" & ")
+print("{:.2f}".format(time_to_reach_coverage_min_50), end=" & ")
+print("{:.2f}".format(time_to_reach_coverage_max_50), end=" & ")
+print("{:.2f}".format(time_to_reach_coverage_avg_75), end=" & ")
+print("{:.2f}".format(time_to_reach_coverage_std_75), end=" & ")
+print("{:.2f}".format(time_to_reach_coverage_min_75), end=" & ")
+print("{:.2f}".format(time_to_reach_coverage_max_75), end=" & ")
+print("{:.2f}".format(time_to_reach_coverage_avg_90), end=" & ")
+print("{:.2f}".format(time_to_reach_coverage_std_90), end=" & ")
+print("{:.2f}".format(time_to_reach_coverage_min_90), end=" & ")
+print("{:.2f}".format(time_to_reach_coverage_max_90), end=" \n")
