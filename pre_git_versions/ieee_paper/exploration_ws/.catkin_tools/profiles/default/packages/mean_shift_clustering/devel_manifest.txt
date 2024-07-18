@@ -1,7 +1,0 @@
-mean_shift_clustering
-/home/andre/exploration_ws/devel/.private/mean_shift_clustering/cmake.lock /home/andre/exploration_ws/devel/./cmake.lock
-/home/andre/exploration_ws/devel/.private/mean_shift_clustering/lib/libmean_shift_clustering.so /home/andre/exploration_ws/devel/lib/libmean_shift_clustering.so
-/home/andre/exploration_ws/devel/.private/mean_shift_clustering/lib/mean_shift_clustering/mean_shift_clustering_node /home/andre/exploration_ws/devel/lib/mean_shift_clustering/mean_shift_clustering_node
-/home/andre/exploration_ws/devel/.private/mean_shift_clustering/lib/pkgconfig/mean_shift_clustering.pc /home/andre/exploration_ws/devel/lib/pkgconfig/mean_shift_clustering.pc
-/home/andre/exploration_ws/devel/.private/mean_shift_clustering/share/mean_shift_clustering/cmake/mean_shift_clusteringConfig-version.cmake /home/andre/exploration_ws/devel/share/mean_shift_clustering/cmake/mean_shift_clusteringConfig-version.cmake
-/home/andre/exploration_ws/devel/.private/mean_shift_clustering/share/mean_shift_clustering/cmake/mean_shift_clusteringConfig.cmake /home/andre/exploration_ws/devel/share/mean_shift_clustering/cmake/mean_shift_clusteringConfig.cmake
