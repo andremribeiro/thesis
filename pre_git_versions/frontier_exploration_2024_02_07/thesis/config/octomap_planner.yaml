@@ -1,0 +1,17 @@
+planning_tree:
+  resolution: 1.0
+  
+safe_obstacle_distance: 1.5 # [m]
+euclidean_distance_cutoff: 1.5 # [m]
+
+min_altitude: 1.0 # [m]
+max_altitude: 8.0 # [m]
+unknown_is_occupied: true
+
+trajectory_generator:
+  relax_heading: true # if true, constraints on heading dynamics are ignored during trajectory generation process
+  use_heading: false # if false heading is ignored during trajectory tracking
+  turn_in_flight_direction: false # sample heading reference in direction of flight
+
+subt_planner:
+  use: true
