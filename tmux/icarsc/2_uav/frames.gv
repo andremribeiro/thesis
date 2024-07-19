@@ -1,0 +1,14 @@
+digraph G {
+"uav1/fcu" -> "uav1/rtk_antenna"[label="Broadcaster: /uav1/fcu_to_rtk_antenna\nAverage rate: 10000.000 Hz\nMost recent transform: 0.000 \nBuffer length: 0.000 sec\n"];
+"uav1/fixed_origin" -> "uav1/local_origin"[label="Broadcaster: /uav1/uav1_nodelet_manager\nAverage rate: 10000.000 Hz\nMost recent transform: 0.000 \nBuffer length: 0.000 sec\n"];
+"uav2/fixed_origin" -> "uav2/local_origin"[label="Broadcaster: /uav2/uav2_nodelet_manager\nAverage rate: 10000.000 Hz\nMost recent transform: 0.000 \nBuffer length: 0.000 sec\n"];
+"uav2/fcu" -> "uav2/rtk_antenna"[label="Broadcaster: /uav2/fcu_to_rtk_antenna\nAverage rate: 10000.000 Hz\nMost recent transform: 0.000 \nBuffer length: 0.000 sec\n"];
+"uav1/fcu" -> "uav1/fcu/uav_marker"[label="Broadcaster: /uav1/tf_published_uav_marker_link\nAverage rate: 10000.000 Hz\nMost recent transform: 0.000 \nBuffer length: 0.000 sec\n"];
+"uav1/fcu" -> "uav1/fcu/arms_red"[label="Broadcaster: /uav1/tf_published_arms_red_link\nAverage rate: 10000.000 Hz\nMost recent transform: 0.000 \nBuffer length: 0.000 sec\n"];
+"uav1/fcu" -> "uav1/fcu/props"[label="Broadcaster: /uav1/tf_published_props_link\nAverage rate: 10000.000 Hz\nMost recent transform: 0.000 \nBuffer length: 0.000 sec\n"];
+"uav1/fcu" -> "uav1/fcu/arms"[label="Broadcaster: /uav1/tf_published_arms_link\nAverage rate: 10000.000 Hz\nMost recent transform: 0.000 \nBuffer length: 0.000 sec\n"];
+"uav2/fcu" -> "uav2/fcu/arms"[label="Broadcaster: /uav2/tf_published_arms_link\nAverage rate: 10000.000 Hz\nMost recent transform: 0.000 \nBuffer length: 0.000 sec\n"];
+"uav2/fcu" -> "uav2/fcu/arms_red"[label="Broadcaster: /uav2/tf_published_arms_red_link\nAverage rate: 10000.000 Hz\nMost recent transform: 0.000 \nBuffer length: 0.000 sec\n"];
+"uav2/fcu" -> "uav2/fcu/uav_marker"[label="Broadcaster: /uav2/tf_published_uav_marker_link\nAverage rate: 10000.000 Hz\nMost recent transform: 0.000 \nBuffer length: 0.000 sec\n"];
+"uav2/fcu" -> "uav2/fcu/props"[label="Broadcaster: /uav2/tf_published_props_link\nAverage rate: 10000.000 Hz\nMost recent transform: 0.000 \nBuffer length: 0.000 sec\n"];
+}

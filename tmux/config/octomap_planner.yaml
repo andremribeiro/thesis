@@ -1,0 +1,45 @@
+planning_tree:
+  resolution: 2.0
+  
+safe_obstacle_distance: 1.0 # [m]
+euclidean_distance_cutoff: 1.0 # [m]
+
+min_altitude: 1.0 # [m]
+max_altitude: 10.0 # [m]
+
+trajectory_generator:
+  relax_heading: true # if true, constraints on heading dynamics are ignored during trajectory generation process
+  use_heading: false # if false heading is ignored during trajectory tracking
+  turn_in_flight_direction: true # sample heading reference in direction of flight
+
+subt_planner:
+  use: true
+  apply_postprocessing: true
+  make_path_straight: true # cannot be applied if postprocessing is active
+  debug_info: false
+  clearing_dist: 0.15 # [m] clear occupied and unknown space up to this distance from the starting position, might cause collision if greater than min_path_length
+  admissibility: 1.0 # allows paths of length up to (admissibility * optimum length), speeds up the planning
+
+  apply_pruning: true
+  pruning_dist: 0.6
+
+  planning_tree:
+    bounding_box:
+      horizontal: 60.0 # [m]
+      vertical: 30.0 # [m]
+
+  postprocessing:
+    timeout: 0.05 # [s]
+    path_length: -1.0 # [m] length of subpath that is passed to postprocessing (set negativ number to process whole path)
+    safe_dist: 1.0 # [m]
+    max_iteration: 5
+    horizontal_neighbors_only: false
+    z_diff_tolerance: 0.5 # [m]
+    fix_goal_point: false
+
+  shortening:
+    window_size: 20
+    distance: 1.0 # [m]
+
+  remove_obsolete_points: true
+  obsolete_points_tolerance: 0.05

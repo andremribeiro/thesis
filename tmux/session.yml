@@ -1,0 +1,81 @@
+# do not modify these
+root: ./
+name: simulation
+socket_name: mrs
+attach: false
+tmux_options: -f /etc/ctu-mrs/tmux.conf
+# you can modify these
+pre_window: export RUN_TYPE=simulation; export UAV_TYPE=f550; export PLATFORM_CONFIG=`rospack find mrs_uav_gazebo_simulation`/config/mrs_uav_system/$UAV_TYPE.yaml; export CUSTOM_CONFIG=./config/custom_config.yaml; export WORLD_CONFIG=./config/world_config.yaml; export NETWORK_CONFIG=./config/network_config.yaml
+startup_window: rosbag
+windows:
+  - roscore:
+      layout: tiled
+      panes:
+        - roscore
+  - gazebo:
+      layout: tiled
+      panes:
+        # - waitForRos; roslaunch mrs_uav_gazebo_simulation simulation.launch world_file:=/home/andre/thesis/worlds/test_city.world gui:=false
+        # - waitForRos; roslaunch mrs_uav_gazebo_simulation simulation.launch world_file:=/home/andre/thesis/worlds/forest.world gui:=false
+        - waitForRos; roslaunch mrs_uav_gazebo_simulation simulation.launch world_file:=/home/andre/thesis/worlds/forest.world gui:=false headless:=true
+        # - waitForRos; roslaunch mrs_uav_gazebo_simulation simulation.launch world_name:=forest gui:=false
+        - waitForGazebo; rosservice call /mrs_drone_spawner/spawn "1 $UAV_TYPE --enable-rangefinder --enable-ground-truth --enable-ouster model:=OS0-128 use_gpu:=True --pos -50 0 1 0"
+      #   - export UAV_NAME=uav1; waitForControl; gz camera -c gzclient_camera -f $UAV_NAME; history -s gz camera -c gzclient_camera -f $UAV_NAME
+  - status:
+      layout: tiled
+      panes:
+        - export UAV_NAME=uav1; waitForHw; roslaunch mrs_uav_status status.launch
+  - hw_api:
+      layout: tiled
+      panes:
+        -  export UAV_NAME=uav1; waitForTime; roslaunch mrs_uav_px4_api api.launch
+  - core:
+      layout: tiled
+      panes:
+        - export UAV_NAME=uav1; waitForHw; roslaunch mrs_uav_core core.launch
+  - tf_connector:
+      layout: tiled
+      panes:
+        - waitForTime; roslaunch mrs_tf_connector tf_connector.launch custom_config:=./config/tf_connector.yaml
+  - automatic_start:
+      layout: tiled
+      panes:
+        - export UAV_NAME=uav1; waitForHw; roslaunch mrs_uav_autostart automatic_start.launch
+  - takeoff:
+      layout: tiled
+      panes:
+        - export UAV_NAME=uav1; waitForControl; rosservice call /$UAV_NAME/hw_api/arming 1; sleep 2; rosservice call /$UAV_NAME/hw_api/offboard
+  - rviz:
+      layout: tiled
+      panes:
+        - export UAV_NAME=uav1; waitForControl; rosrun rviz rviz -d ./uav.rviz
+        - export UAV_NAME=uav1; waitForControl; roslaunch mrs_rviz_plugins rviz_interface.launch
+  - rviz_uav_models:
+      layout: tiled
+      panes:
+        - export UAV_NAME=uav1; waitForControl; roslaunch mrs_rviz_plugins load_robot.launch
+  - layout:
+      layout: tiled
+      panes:
+        - export UAV_NAME=uav1; waitForControl; ~/.i3/layout_manager.sh ./layout.json
+  # - pcl_tools:
+  #     layout: tiled
+  #     panes:
+  #       - export UAV_NAME=uav1; waitForHw; roslaunch mrs_pcl_tools pcl_filter.launch custom_config:=./config/pcl_filter.yaml name_suffix:=ouster topic_3d_lidar_in:=os_cloud_nodelet/points
+  - octomap:
+      layout: tiled
+      panes:
+        - export UAV_NAME=uav1; waitForControl; sleep 10; source ~/mapping_ws/devel/setup.bash; roslaunch octomap_server octomap_mapping.launch ns:=$UAV_NAME
+  - planner:
+      layout: tiled
+      panes:
+        - export UAV_NAME=uav1; waitForControl; sleep 15; source ~/mapping_ws/devel/setup.bash; roslaunch mrs_octomap_planner octomap_planner.launch custom_config:=./config/octomap_planner.yaml
+  - exploration:
+      layout: tiled
+      panes:
+        - export UAV_NAME=uav1; waitForControl; sleep 30; source ~/exploration_ws/devel/setup.bash; roslaunch frontier_exploration explore.launch num_uavs:=1 uav_id:=1
+  - rosbag:
+      layout: tiled
+      panes:
+        - cd bags/1_uav; export UAV_NAME=uav1; waitForControl; sleep 30; rosbag record /uav1/results /uav1/estimation_manager/odom_main --duration=20m
+        - waitForRos; rostopic echo /uav1/results/data

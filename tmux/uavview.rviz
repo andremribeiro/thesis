@@ -1,0 +1,986 @@
+Panels:
+  - Class: rviz/Displays
+    Help Height: 0
+    Name: Displays
+    Property Tree Widget:
+      Expanded:
+        - /Global Options1
+        - /TF1/Frames1
+        - /TF1/Tree1
+        - /MpcTracker21/PostprocessedTrajectory1/Poses1
+        - /Mapping1
+        - /Mapping1/OccupancyGrid1
+        - /Exploration1
+        - /Odometry1/Shape1
+        - /Odometry3/Shape1
+      Splitter Ratio: 0.6970587968826294
+    Tree Height: 695
+  - Class: rviz/Selection
+    Name: Selection
+  - Class: rviz/Tool Properties
+    Expanded:
+      - /2D Pose Estimate1
+      - /2D Nav Goal1
+      - /Publish Point1
+      - /Plan path1
+      - /Custom Goal1
+    Name: Tool Properties
+    Splitter Ratio: 0.5886790156364441
+  - Class: rviz/Views
+    Expanded:
+      - /Current View1
+    Name: Views
+    Splitter Ratio: 0.5
+  - Class: rviz/Time
+    Name: Time
+    SyncMode: 0
+    SyncSource: ""
+Preferences:
+  PromptSaveOnExit: true
+Toolbars:
+  toolButtonStyle: 2
+Visualization Manager:
+  Class: ""
+  Displays:
+    - Alpha: 0.20000000298023224
+      Cell Size: 1
+      Class: rviz/Grid
+      Color: 160; 160; 164
+      Enabled: true
+      Line Style:
+        Line Width: 0.029999999329447746
+        Value: Lines
+      Name: Grid
+      Normal Cell Count: 0
+      Offset:
+        X: 0
+        Y: 0
+        Z: 0
+      Plane: XY
+      Plane Cell Count: 100
+      Reference Frame: <Fixed Frame>
+      Value: true
+    - Alpha: 0.5
+      Cell Size: 5
+      Class: rviz/Grid
+      Color: 160; 160; 164
+      Enabled: false
+      Line Style:
+        Line Width: 0.029999999329447746
+        Value: Lines
+      Name: Grid
+      Normal Cell Count: 0
+      Offset:
+        X: 0
+        Y: 0
+        Z: 0
+      Plane: XY
+      Plane Cell Count: 100
+      Reference Frame: <Fixed Frame>
+      Value: false
+    - Class: rviz/TF
+      Enabled: false
+      Filter (blacklist): ""
+      Filter (whitelist): ""
+      Frame Timeout: 15
+      Frames:
+        All Enabled: false
+      Marker Alpha: 1
+      Marker Scale: 1
+      Name: TF
+      Show Arrows: true
+      Show Axes: true
+      Show Names: true
+      Tree:
+        {}
+      Update Interval: 0
+      Value: false
+    - Alpha: 1
+      Class: rviz/RobotModel
+      Collision Enabled: false
+      Enabled: false
+      Links:
+        All Links Enabled: true
+        Expand Joint Details: false
+        Expand Link Details: false
+        Expand Tree: false
+        Link Tree Style: Links in Alphabetic Order
+      Name: UAV1
+      Robot Description: /uav1/robot_model
+      TF Prefix: ""
+      Update Interval: 0
+      Value: false
+      Visual Enabled: true
+    - Alpha: 1
+      Class: rviz/RobotModel
+      Collision Enabled: false
+      Enabled: false
+      Links:
+        All Links Enabled: true
+        Expand Joint Details: false
+        Expand Link Details: false
+        Expand Tree: false
+        Link Tree Style: Links in Alphabetic Order
+      Name: UAV2
+      Robot Description: /uav2/robot_model
+      TF Prefix: ""
+      Update Interval: 0
+      Value: false
+      Visual Enabled: true
+    - Alpha: 1
+      Class: rviz/RobotModel
+      Collision Enabled: false
+      Enabled: false
+      Links:
+        All Links Enabled: true
+        Expand Joint Details: false
+        Expand Link Details: false
+        Expand Tree: false
+        Link Tree Style: Links in Alphabetic Order
+      Name: UAV3
+      Robot Description: /uav3/robot_model
+      TF Prefix: ""
+      Update Interval: 0
+      Value: false
+      Visual Enabled: true
+    - Class: rviz/Group
+      Displays:
+        - Background color: 204; 204; 204
+          Class: mrs_rviz_plugins/Status
+          Computer load: true
+          Control manager: true
+          Custom strings: false
+          Enabled: true
+          Hw api state: true
+          Name: Status
+          Node stats list: false
+          Odometry: true
+          Text color: 0; 0; 0
+          Top Line: true
+          Topic rates: false
+          UAV name: uav1
+          Value: true
+        - Class: rviz/InteractiveMarkers
+          Enable Transparency: true
+          Enabled: true
+          Name: Control Display
+          Show Axes: false
+          Show Descriptions: true
+          Show Visual Aids: false
+          Update Topic: control/update
+          Value: true
+      Enabled: false
+      Name: Status
+    - Class: rviz/Group
+      Displays:
+        - Background color: 204; 204; 204
+          Class: mrs_rviz_plugins/Status
+          Computer load: true
+          Control manager: true
+          Custom strings: false
+          Enabled: true
+          Hw api state: true
+          Name: Status
+          Node stats list: false
+          Odometry: true
+          Text color: 0; 0; 0
+          Top Line: true
+          Topic rates: false
+          UAV name: uav2
+          Value: true
+        - Class: rviz/InteractiveMarkers
+          Enable Transparency: true
+          Enabled: true
+          Name: Control Display
+          Show Axes: false
+          Show Descriptions: true
+          Show Visual Aids: false
+          Update Topic: control/update
+          Value: true
+      Enabled: false
+      Name: Status2
+    - Class: rviz/Group
+      Displays:
+        - Alpha: 1
+          Autocompute Intensity Bounds: true
+          Autocompute Value Bounds:
+            Max Value: 15.223974227905273
+            Min Value: 0.2265148162841797
+            Value: true
+          Axis: Z
+          Channel Name: intensity
+          Class: rviz/PointCloud2
+          Color: 255; 255; 255
+          Color Transformer: AxisColor
+          Decay Time: 0
+          Enabled: true
+          Invert Rainbow: false
+          Max Color: 255; 255; 255
+          Min Color: 0; 0; 0
+          Name: ouster_raw
+          Position Transformer: XYZ
+          Queue Size: 10
+          Selectable: true
+          Size (Pixels): 3
+          Size (m): 0.10000000149011612
+          Style: Spheres
+          Topic: /uav1/os_cloud_nodelet/points
+          Unreliable: true
+          Use Fixed Frame: true
+          Use rainbow: true
+          Value: true
+        - Alpha: 1
+          Autocompute Intensity Bounds: true
+          Autocompute Value Bounds:
+            Max Value: 10
+            Min Value: -10
+            Value: true
+          Axis: Z
+          Channel Name: intensity
+          Class: rviz/LaserScan
+          Color: 0; 0; 0
+          Color Transformer: FlatColor
+          Decay Time: 0
+          Enabled: true
+          Invert Rainbow: false
+          Max Color: 255; 255; 255
+          Min Color: 0; 0; 0
+          Name: rplidar
+          Position Transformer: XYZ
+          Queue Size: 10
+          Selectable: true
+          Size (Pixels): 3
+          Size (m): 0.10000000149011612
+          Style: Flat Squares
+          Topic: /uav1/rplidar/scan
+          Unreliable: true
+          Use Fixed Frame: true
+          Use rainbow: true
+          Value: true
+        - Class: rviz/Image
+          Enabled: true
+          Image Topic: /uav1/vio/camera/image_raw
+          Max Value: 1
+          Median window: 5
+          Min Value: 0
+          Name: vio_camera
+          Normalize Range: true
+          Queue Size: 2
+          Transport Hint: raw
+          Unreliable: false
+          Value: true
+      Enabled: false
+      Name: Sensors
+    - Class: rviz/Group
+      Displays:
+        - Class: rviz/MarkerArray
+          Enabled: true
+          Marker Topic: /uav1/control_manager/safety_area_markers
+          Name: SafetyhArea
+          Namespaces:
+            {}
+          Queue Size: 100
+          Value: true
+        - Class: rviz/MarkerArray
+          Enabled: true
+          Marker Topic: /uav1/control_manager/safety_area_coordinates_markers
+          Name: SafetyAreaCoordinates
+          Namespaces:
+            {}
+          Queue Size: 100
+          Value: true
+        - Class: rviz/MarkerArray
+          Enabled: true
+          Marker Topic: /uav1/control_manager/disturbances_markers
+          Name: Disturbances
+          Namespaces:
+            {}
+          Queue Size: 100
+          Value: true
+        - Angle Tolerance: 0.009999999776482582
+          Class: rviz/Odometry
+          Covariance:
+            Orientation:
+              Alpha: 0.5
+              Color: 255; 255; 127
+              Color Style: Unique
+              Frame: Local
+              Offset: 1
+              Scale: 1
+              Value: true
+            Position:
+              Alpha: 0.30000001192092896
+              Color: 204; 51; 204
+              Scale: 1
+              Value: true
+            Value: true
+          Enabled: true
+          Keep: 1
+          Name: control_reference
+          Position Tolerance: 0.009999999776482582
+          Queue Size: 10
+          Shape:
+            Alpha: 1
+            Axes Length: 1
+            Axes Radius: 0.10000000149011612
+            Color: 255; 25; 0
+            Head Length: 0.30000001192092896
+            Head Radius: 0.10000000149011612
+            Shaft Length: 1
+            Shaft Radius: 0.05000000074505806
+            Value: Axes
+          Topic: /uav1/control_manager/control_reference
+          Unreliable: true
+          Value: true
+        - Class: rviz/Group
+          Displays:
+            - Alpha: 1
+              Arrow Length: 0.30000001192092896
+              Axes Length: 0.30000001192092896
+              Axes Radius: 0.009999999776482582
+              Class: rviz/PoseArray
+              Color: 0; 170; 0
+              Enabled: true
+              Head Length: 0.07000000029802322
+              Head Radius: 0.029999999329447746
+              Name: Poses
+              Queue Size: 10
+              Shaft Length: 0.23000000417232513
+              Shaft Radius: 0.009999999776482582
+              Shape: Arrow (Flat)
+              Topic: /uav1/control_manager/trajectory_original/poses
+              Unreliable: true
+              Value: true
+            - Class: rviz/MarkerArray
+              Enabled: true
+              Marker Topic: /uav1/control_manager/trajectory_original/markers
+              Name: Markers
+              Namespaces:
+                {}
+              Queue Size: 100
+              Value: true
+          Enabled: true
+          Name: OriginalTrajectory
+        - Alpha: 0.10000000149011612
+          Class: mrs_rviz_plugins/Bumper
+          Collision alpha: 0.5
+          Collision color: 255; 0; 0
+          Color: 204; 51; 204
+          Colorize collisions: true
+          Display mode: sensor types
+          Enabled: true
+          History Length: 1
+          Horizontal collision threshold: 1
+          Name: Bumper
+          Queue Size: 10
+          Show sectors with no data: false
+          Show undetected obstacles: true
+          Topic: /uav1/bumper/obstacle_sectors
+          Unreliable: true
+          Value: true
+          Vertical collision threshold: 1
+      Enabled: false
+      Name: ControlManager
+    - Class: rviz/Group
+      Displays:
+        - Class: rviz/MarkerArray
+          Enabled: true
+          Marker Topic: /uav2/control_manager/safety_area_markers
+          Name: SafetyhArea
+          Namespaces:
+            {}
+          Queue Size: 100
+          Value: true
+        - Class: rviz/MarkerArray
+          Enabled: true
+          Marker Topic: /uav2/control_manager/safety_area_coordinates_markers
+          Name: SafetyAreaCoordinates
+          Namespaces:
+            {}
+          Queue Size: 100
+          Value: true
+        - Class: rviz/MarkerArray
+          Enabled: true
+          Marker Topic: /uav2/control_manager/disturbances_markers
+          Name: Disturbances
+          Namespaces:
+            {}
+          Queue Size: 100
+          Value: true
+        - Angle Tolerance: 0.009999999776482582
+          Class: rviz/Odometry
+          Covariance:
+            Orientation:
+              Alpha: 0.5
+              Color: 255; 255; 127
+              Color Style: Unique
+              Frame: Local
+              Offset: 1
+              Scale: 1
+              Value: true
+            Position:
+              Alpha: 0.30000001192092896
+              Color: 204; 51; 204
+              Scale: 1
+              Value: true
+            Value: true
+          Enabled: true
+          Keep: 1
+          Name: control_reference
+          Position Tolerance: 0.009999999776482582
+          Queue Size: 10
+          Shape:
+            Alpha: 1
+            Axes Length: 1
+            Axes Radius: 0.10000000149011612
+            Color: 255; 25; 0
+            Head Length: 0.30000001192092896
+            Head Radius: 0.10000000149011612
+            Shaft Length: 1
+            Shaft Radius: 0.05000000074505806
+            Value: Axes
+          Topic: /uav2/control_manager/control_reference
+          Unreliable: true
+          Value: true
+        - Class: rviz/Group
+          Displays:
+            - Alpha: 1
+              Arrow Length: 0.30000001192092896
+              Axes Length: 0.30000001192092896
+              Axes Radius: 0.009999999776482582
+              Class: rviz/PoseArray
+              Color: 0; 170; 0
+              Enabled: true
+              Head Length: 0.07000000029802322
+              Head Radius: 0.029999999329447746
+              Name: Poses
+              Queue Size: 10
+              Shaft Length: 0.23000000417232513
+              Shaft Radius: 0.009999999776482582
+              Shape: Arrow (Flat)
+              Topic: /uav2/control_manager/trajectory_original/poses
+              Unreliable: true
+              Value: true
+            - Class: rviz/MarkerArray
+              Enabled: true
+              Marker Topic: /uav2/control_manager/trajectory_original/markers
+              Name: Markers
+              Namespaces:
+                {}
+              Queue Size: 100
+              Value: true
+          Enabled: true
+          Name: OriginalTrajectory
+        - Alpha: 0.10000000149011612
+          Class: mrs_rviz_plugins/Bumper
+          Collision alpha: 0.5
+          Collision color: 255; 0; 0
+          Color: 204; 51; 204
+          Colorize collisions: true
+          Display mode: sensor types
+          Enabled: true
+          History Length: 1
+          Horizontal collision threshold: 1
+          Name: Bumper
+          Queue Size: 10
+          Show sectors with no data: false
+          Show undetected obstacles: true
+          Topic: /uav2/bumper/obstacle_sectors
+          Unreliable: true
+          Value: true
+          Vertical collision threshold: 1
+      Enabled: false
+      Name: ControlManager2
+    - Class: rviz/Group
+      Displays:
+        - Angle Tolerance: 0.009999999776482582
+          Class: rviz/Odometry
+          Covariance:
+            Orientation:
+              Alpha: 0.5
+              Color: 255; 255; 127
+              Color Style: Unique
+              Frame: Local
+              Offset: 1
+              Scale: 1
+              Value: true
+            Position:
+              Alpha: 0.30000001192092896
+              Color: 204; 51; 204
+              Scale: 1
+              Value: true
+            Value: false
+          Enabled: true
+          Keep: 1
+          Name: odom_main
+          Position Tolerance: 0.009999999776482582
+          Queue Size: 10
+          Shape:
+            Alpha: 1
+            Axes Length: 0.5
+            Axes Radius: 0.10000000149011612
+            Color: 0; 25; 255
+            Head Length: 1
+            Head Radius: 0.30000001192092896
+            Shaft Length: 1
+            Shaft Radius: 0.05000000074505806
+            Value: Axes
+          Topic: /uav1/estimation_manager/odom_main
+          Unreliable: true
+          Value: true
+      Enabled: false
+      Name: EstimationManager
+    - Class: rviz/Group
+      Displays:
+        - Alpha: 1
+          Arrow Length: 0.30000001192092896
+          Axes Length: 0.30000001192092896
+          Axes Radius: 0.009999999776482582
+          Class: rviz/PoseArray
+          Color: 0; 0; 255
+          Enabled: true
+          Head Length: 0.07000000029802322
+          Head Radius: 0.029999999329447746
+          Name: MpcPredictionTrajectory
+          Queue Size: 10
+          Shaft Length: 0.23000000417232513
+          Shaft Radius: 0.009999999776482582
+          Shape: Arrow (Flat)
+          Topic: /uav1/control_manager/mpc_tracker/predicted_trajectory_debugging
+          Unreliable: true
+          Value: true
+        - Alpha: 1
+          Arrow Length: 0.30000001192092896
+          Axes Length: 0.10000000149011612
+          Axes Radius: 0.05000000074505806
+          Class: rviz/PoseArray
+          Color: 255; 25; 0
+          Enabled: true
+          Head Length: 0.07000000029802322
+          Head Radius: 0.029999999329447746
+          Name: MpcInnerReference
+          Queue Size: 10
+          Shaft Length: 0.23000000417232513
+          Shaft Radius: 0.009999999776482582
+          Shape: Axes
+          Topic: /uav1/control_manager/mpc_tracker/mpc_reference_debugging
+          Unreliable: true
+          Value: true
+        - Class: rviz/Group
+          Displays:
+            - Alpha: 1
+              Arrow Length: 0.30000001192092896
+              Axes Length: 0.30000001192092896
+              Axes Radius: 0.009999999776482582
+              Class: rviz/PoseArray
+              Color: 255; 25; 0
+              Enabled: true
+              Head Length: 0.07000000029802322
+              Head Radius: 0.029999999329447746
+              Name: Poses
+              Queue Size: 10
+              Shaft Length: 0.23000000417232513
+              Shaft Radius: 0.009999999776482582
+              Shape: Arrow (Flat)
+              Topic: /uav1/control_manager/mpc_tracker/trajectory_processed/poses
+              Unreliable: true
+              Value: true
+            - Class: rviz/MarkerArray
+              Enabled: true
+              Marker Topic: /uav1/control_manager/mpc_tracker/trajectory_processed/markers
+              Name: Markers
+              Namespaces:
+                {}
+              Queue Size: 100
+              Value: true
+          Enabled: true
+          Name: PostprocessedTrajectory
+      Enabled: false
+      Name: MpcTracker
+    - Class: rviz/Group
+      Displays:
+        - Alpha: 1
+          Arrow Length: 0.30000001192092896
+          Axes Length: 0.30000001192092896
+          Axes Radius: 0.009999999776482582
+          Class: rviz/PoseArray
+          Color: 0; 0; 255
+          Enabled: true
+          Head Length: 0.07000000029802322
+          Head Radius: 0.029999999329447746
+          Name: MpcPredictionTrajectory
+          Queue Size: 10
+          Shaft Length: 0.23000000417232513
+          Shaft Radius: 0.009999999776482582
+          Shape: Arrow (Flat)
+          Topic: /uav2/control_manager/mpc_tracker/predicted_trajectory_debugging
+          Unreliable: true
+          Value: true
+        - Alpha: 1
+          Arrow Length: 0.30000001192092896
+          Axes Length: 0.10000000149011612
+          Axes Radius: 0.05000000074505806
+          Class: rviz/PoseArray
+          Color: 255; 25; 0
+          Enabled: true
+          Head Length: 0.07000000029802322
+          Head Radius: 0.029999999329447746
+          Name: MpcInnerReference
+          Queue Size: 10
+          Shaft Length: 0.23000000417232513
+          Shaft Radius: 0.009999999776482582
+          Shape: Axes
+          Topic: /uav2/control_manager/mpc_tracker/mpc_reference_debugging
+          Unreliable: true
+          Value: true
+        - Class: rviz/Group
+          Displays:
+            - Alpha: 1
+              Arrow Length: 0.30000001192092896
+              Axes Length: 0.30000001192092896
+              Axes Radius: 0.009999999776482582
+              Class: rviz/PoseArray
+              Color: 255; 25; 0
+              Enabled: true
+              Head Length: 0.07000000029802322
+              Head Radius: 0.029999999329447746
+              Name: Poses
+              Queue Size: 10
+              Shaft Length: 0.23000000417232513
+              Shaft Radius: 0.009999999776482582
+              Shape: Arrow (Flat)
+              Topic: /uav2/control_manager/mpc_tracker/trajectory_processed/poses
+              Unreliable: true
+              Value: true
+            - Class: rviz/MarkerArray
+              Enabled: true
+              Marker Topic: /uav2/control_manager/mpc_tracker/trajectory_processed/markers
+              Name: Markers
+              Namespaces:
+                {}
+              Queue Size: 100
+              Value: true
+          Enabled: true
+          Name: PostprocessedTrajectory
+      Enabled: false
+      Name: MpcTracker2
+    - Class: rviz/Group
+      Displays:
+        - Class: rviz/MarkerArray
+          Enabled: true
+          Marker Topic: /uav1/trajectory_generation/markers/final
+          Name: final
+          Namespaces:
+            {}
+          Queue Size: 100
+          Value: true
+        - Class: rviz/MarkerArray
+          Enabled: true
+          Marker Topic: /uav1/trajectory_generation/markers/original
+          Name: original
+          Namespaces:
+            {}
+          Queue Size: 100
+          Value: true
+      Enabled: false
+      Name: TrajectoryGeneration
+    - Class: rviz/Group
+      Displays:
+        - Class: rviz/MarkerArray
+          Enabled: true
+          Marker Topic: /uav2/trajectory_generation/markers/final
+          Name: final
+          Namespaces:
+            {}
+          Queue Size: 100
+          Value: true
+        - Class: rviz/MarkerArray
+          Enabled: true
+          Marker Topic: /uav2/trajectory_generation/markers/original
+          Name: original
+          Namespaces:
+            {}
+          Queue Size: 100
+          Value: true
+      Enabled: false
+      Name: TrajectoryGeneration2
+    - Class: rviz/Group
+      Displays:
+        - Class: octomap_rviz_plugin/OccupancyGrid
+          Enabled: true
+          Max. Height Display: 3.4028234663852886e+38
+          Max. Octree Depth: 16
+          Min. Height Display: -3.4028234663852886e+38
+          Name: OccupancyGrid
+          Octomap Topic: /octomap_binary
+          Queue Size: 5
+          Value: true
+          Voxel Alpha: 1
+          Voxel Coloring: Z-Axis
+          Voxel Rendering: Occupied Voxels
+      Enabled: true
+      Name: Mapping
+    - Class: rviz/Group
+      Displays:
+        - Class: rviz/Marker
+          Enabled: false
+          Marker Topic: /uav1/frontier_markers
+          Name: Frontier Cells
+          Namespaces:
+            {}
+          Queue Size: 100
+          Value: false
+        - Class: rviz/Marker
+          Enabled: false
+          Marker Topic: /uav1/cluster_markers
+          Name: Cluster Cells
+          Namespaces:
+            {}
+          Queue Size: 100
+          Value: false
+        - Class: rviz/Marker
+          Enabled: true
+          Marker Topic: /uav1/waypoint_marker
+          Name: Best Frontier
+          Namespaces:
+            {}
+          Queue Size: 100
+          Value: true
+        - Class: rviz/Marker
+          Enabled: true
+          Marker Topic: /uav2/waypoint_marker
+          Name: Best Frontier 2
+          Namespaces:
+            {}
+          Queue Size: 100
+          Value: true
+        - Class: rviz/Marker
+          Enabled: true
+          Marker Topic: /uav3/waypoint_marker
+          Name: Best Frontier 3
+          Namespaces:
+            {}
+          Queue Size: 100
+          Value: true
+      Enabled: false
+      Name: Exploration
+    - Angle Tolerance: 0.10000000149011612
+      Class: rviz/Odometry
+      Covariance:
+        Orientation:
+          Alpha: 0.5
+          Color: 255; 255; 127
+          Color Style: Unique
+          Frame: Local
+          Offset: 1
+          Scale: 1
+          Value: true
+        Position:
+          Alpha: 0.30000001192092896
+          Color: 204; 51; 204
+          Scale: 1
+          Value: true
+        Value: true
+      Enabled: true
+      Keep: 0
+      Name: Odometry
+      Position Tolerance: 0.10000000149011612
+      Queue Size: 10
+      Shape:
+        Alpha: 1
+        Axes Length: 1
+        Axes Radius: 0.10000000149011612
+        Color: 255; 25; 0
+        Head Length: 0
+        Head Radius: 0
+        Shaft Length: 0.20000000298023224
+        Shaft Radius: 0.20000000298023224
+        Value: Arrow
+      Topic: /bag/uav1/estimation_manager/odom_main
+      Unreliable: false
+      Value: true
+    - Angle Tolerance: 0.10000000149011612
+      Class: rviz/Odometry
+      Covariance:
+        Orientation:
+          Alpha: 0.5
+          Color: 255; 255; 127
+          Color Style: Unique
+          Frame: Local
+          Offset: 1
+          Scale: 1
+          Value: true
+        Position:
+          Alpha: 0.30000001192092896
+          Color: 204; 51; 204
+          Scale: 1
+          Value: true
+        Value: true
+      Enabled: true
+      Keep: 0
+      Name: Odometry
+      Position Tolerance: 0.10000000149011612
+      Queue Size: 10
+      Shape:
+        Alpha: 1
+        Axes Length: 1
+        Axes Radius: 0.10000000149011612
+        Color: 255; 255; 0
+        Head Length: 0
+        Head Radius: 0
+        Shaft Length: 0.20000000298023224
+        Shaft Radius: 0.20000000298023224
+        Value: Arrow
+      Topic: /bag/uav2/estimation_manager/odom_main
+      Unreliable: false
+      Value: true
+    - Angle Tolerance: 0.10000000149011612
+      Class: rviz/Odometry
+      Covariance:
+        Orientation:
+          Alpha: 0.5
+          Color: 255; 255; 127
+          Color Style: Unique
+          Frame: Local
+          Offset: 1
+          Scale: 1
+          Value: true
+        Position:
+          Alpha: 0.30000001192092896
+          Color: 204; 51; 204
+          Scale: 1
+          Value: true
+        Value: true
+      Enabled: true
+      Keep: 0
+      Name: Odometry
+      Position Tolerance: 0.10000000149011612
+      Queue Size: 10
+      Shape:
+        Alpha: 1
+        Axes Length: 1
+        Axes Radius: 0.10000000149011612
+        Color: 0; 255; 255
+        Head Length: 0
+        Head Radius: 0
+        Shaft Length: 0.20000000298023224
+        Shaft Radius: 0.20000000298023224
+        Value: Arrow
+      Topic: /bag/uav3/estimation_manager/odom_main
+      Unreliable: false
+      Value: true
+  Enabled: true
+  Global Options:
+    Background Color: 25; 25; 25
+    Default Light: true
+    Fixed Frame: uav1/world_origin
+    Frame Rate: 60
+  Name: root
+  Tools:
+    - Class: rviz/Interact
+      Hide Inactive Objects: true
+    - Class: rviz/MoveCamera
+    - Class: rviz/Select
+    - Class: rviz/FocusCamera
+    - Class: rviz/Measure
+    - Class: rviz/SetInitialPose
+      Theta std deviation: 0.2617993950843811
+      Topic: /initialpose
+      X std deviation: 0.5
+      Y std deviation: 0.5
+    - Class: rviz/SetGoal
+      Topic: /move_base_simple/goal
+    - Class: rviz/PublishPoint
+      Single click: true
+      Topic: /clicked_point
+    - Class: mrs_rviz_plugins/ControlTool
+    - Class: mrs_rviz_plugins/WaypointPlanner
+      Drone name: uav1
+      Fly now: true
+      Height offset: 0
+      Loop: false
+      Shape: Axes
+      Stop at waypoints: false
+      Topic: trajectory_generation/path
+      Use heading: true
+    - Class: mrs_rviz_plugins/NamedSetGoal
+      Name: name
+      Topic: goal
+  Value: true
+  Views:
+    Current:
+      Class: rviz/Orbit
+      Distance: 60
+      Enable Stereo Rendering:
+        Stereo Eye Separation: 0.05999999865889549
+        Stereo Focal Distance: 1
+        Swap Stereo Eyes: false
+        Value: false
+      Field of View: 1
+      Focal Point:
+        X: 5
+        Y: -5
+        Z: 0
+      Focal Shape Fixed Size: true
+      Focal Shape Size: 0.05000000074505806
+      Invert Z Axis: false
+      Name: Current View
+      Near Clip Distance: 0.009999999776482582
+      Pitch: 1
+      Target Frame: uav1/world_origin
+      Yaw: -0.7850000262260437
+    Saved:
+      - Angle: 0
+        Class: rviz/TopDownOrtho
+        Enable Stereo Rendering:
+          Stereo Eye Separation: 0.05999999865889549
+          Stereo Focal Distance: 1
+          Swap Stereo Eyes: false
+          Value: false
+        Invert Z Axis: false
+        Name: TopDownOrtho
+        Near Clip Distance: 0.009999999776482582
+        Scale: 10
+        Target Frame: uav1/world_origin
+        X: 0
+        Y: 0
+      - Class: rviz/Orbit
+        Distance: 60
+        Enable Stereo Rendering:
+          Stereo Eye Separation: 0.05999999865889549
+          Stereo Focal Distance: 1
+          Swap Stereo Eyes: false
+          Value: false
+        Field of View: 1
+        Focal Point:
+          X: 0
+          Y: 0
+          Z: 0
+        Focal Shape Fixed Size: true
+        Focal Shape Size: 0.05000000074505806
+        Invert Z Axis: false
+        Name: Orbit
+        Near Clip Distance: 0.009999999776482582
+        Pitch: 0.7850000262260437
+        Target Frame: uav1/world_origin
+        Yaw: -1.5700000524520874
+Window Geometry:
+  Displays:
+    collapsed: false
+  Height: 941
+  Hide Left Dock: false
+  Hide Right Dock: false
+  QMainWindow State: 000000ff00000000fd000000040000000000000161000002fefc020000000afb0000001200530065006c0065006300740069006f006e00000001e10000009b0000006e00fffffffb000000120056006900650077007300200054006f006f02000001df000002110000018500000122fb000000200054006f006f006c002000500072006f0070006500720074006900650073003203000002880000011d000002210000017afb000000100044006900730070006c0061007900730100000047000002fe000000f100fffffffb0000001400760069006f005f00630061006d0065007200610000000122000000bd0000001900fffffffb0000002000730065006c0065006300740069006f006e00200062007500660066006500720200000138000000aa0000023a00000294fb00000014005700690064006500530074006500720065006f02000000e6000000d2000003ee0000030bfb0000000c004b0069006e0065006300740200000186000001060000030c00000261fb0000000a0049006d00610067006501000001400000009f0000000000000000fb0000001400760069006f005f00630061006d00650072006100000001400000009f00000000000000000000000100000116000002fefc0200000004fb0000001e0054006f006f006c002000500072006f007000650072007400690065007301000000470000013e0000006e00fffffffb0000000a00560069006500770073010000018c000001b9000000c200fffffffb0000001e0054006f006f006c002000500072006f0070006500720074006900650073000000016d0000016e0000000000000000fb0000001200530065006c0065006300740069006f006e010000025a000000b200000000000000000000000200000490000000a9fc0100000001fb0000000a00560069006500770073030000004e00000080000002e100000197000000030000078000000040fc0100000002fb0000000800540069006d00650100000000000007800000045a00fffffffb0000000800540069006d00650100000000000004500000000000000000000004fb000002fe00000004000000040000000800000008fc0000000100000002000000010000000a0054006f006f006c00730100000000ffffffff0000000000000000
+  Selection:
+    collapsed: false
+  Time:
+    collapsed: false
+  Tool Properties:
+    collapsed: false
+  Views:
+    collapsed: false
+  Width: 1920
+  X: 0
+  Y: 34
+  vio_camera:
+    collapsed: false
